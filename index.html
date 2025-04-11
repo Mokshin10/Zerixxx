@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>QA Learning Plan</title>
+    <style>
+        :root {
+            --bg-dark: #121212;
+            --card-dark: #1e1e1e;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --accent-color: #e1306c;
+            --progress-color: #4CAF50;
+            --tab-active: #e1306c;
+            --tab-inactive: #555;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            padding: 0;
+            margin: 0;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .container {
+            max-width: 100%;
+            padding: 15px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #333;
+            margin-bottom: 15px;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            color: var(--text-primary);
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        .tabs {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        
+        .tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 14px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        .tab.active {
+            background-color: var(--tab-active);
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .progress-container {
+            width: 100%;
+            background-color: #333;
+            border-radius: 10px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background-color: var(--progress-color);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-text {
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+        
+        .month-progress {
+            margin: 10px 0;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .day-card {
+            background-color: var(--card-dark);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .day-number {
+            font-weight: bold;
+            color: var(--accent-color);
+            font-size: 16px;
+        }
+        
+        .day-title {
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .day-task {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+        
+        .resources {
+            margin-top: 10px;
+        }
+        
+        .resource-link {
+            display: inline-block;
+            background-color: #333;
+            color: var(--text-primary);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            text-decoration: none;
+        }
+        
+        .resource-link:hover {
+            background-color: var(--accent-color);
+        }
+        
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        
+        .checkbox-label {
+            margin-left: 8px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .custom-checkbox {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--text-secondary);
+            border-radius: 4px;
+            outline: none;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .custom-checkbox:checked {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+        
+        .custom-checkbox:checked::after {
+            content: "✓";
+            position: absolute;
+            color: white;
+            font-size: 12px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        @media (max-width: 375px) {
+            .tab {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+            
+            .day-card {
+                padding: 12px;
+            }
+            
+            .day-title {
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>QA Learning Plan</h1>
+            <p>5-месячный путь к профессии тестировщика</p>
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress-bar" id="overall-progress" style="width: 0%"></div>
+        </div>
+        <div class="progress-text" id="progress-text">0% завершено</div>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="openTab(event, 'month1')">Месяц 1</div>
+            <div class="tab" onclick="openTab(event, 'month2')">Месяц 2</div>
+            <div class="tab" onclick="openTab(event, 'month3')">Месяц 3</div>
+            <div class="tab" onclick="openTab(event, 'month4')">Месяц 4</div>
+            <div class="tab" onclick="openTab(event, 'month5')">Месяц 5</div>
+        </div>
+        
+        <!-- Месяц 1 -->
+        <div id="month1" class="tab-content active">
+            <h2 style="margin-bottom: 15px; color: var(--accent-color);">Основы тестирования</h2>
+            <div class="month-progress" id="month1-progress">Прогресс: 0/30 дней (0%)</div>
+            
+            <!-- День 1 -->
+            <div class="day-card">
+                <div class="day-header">
+                    <span class="day-number">День 1</span>
+                </div>
+                <h3 class="day-title">Кто такой тестировщик?</h3>
+                <p class="day-task">Конспект: 5 главных обязанностей QA</p>
+                <div class="resources">
+                    <a href="https://habr.com/ru/articles/549054/" class="resource-link" target="_blank">Текст</a>
+                    <a href="https://rutube.ru/video/6b5a5f3b8c7f1a2f5e5e5e5e5e5e5e5/" class="resource-link" target="_blank">Видео 1</a>
+                    <a href="https://vk.com/video-123456789_456239017" class="resource-link" target="_blank">Видео 2</a>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="day1" onchange="updateProgress()">
+                    <label for="day1" class="checkbox-label">Отметить как выполненное</label>
+                </div>
+            </div>
+            
+            <!-- День 2 -->
+            <div class="day-card">
+                <div class="day-header">
+                    <span class="day-number">День 2</span>
+                </div>
+                <h3 class="day-title">SDLC (цикл разработки)</h3>
+                <p class="day-task">Нарисовать схему этапов</p>
+                <div class="resources">
+                    <a href="https://qastart.ru/sdlc-software-development-life-cycle" class="resource-link" target="_blank">Текст</a>
+                    <a href="https://rutube.ru/video/3a2b1c4d5e6f7g8h9i0j1k2l3m4n5o6/" class="resource-link" target="_blank">Видео</a>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="day2" onchange="updateProgress()">
+                    <label for="day2" class="checkbox-label">Отметить как выполненное</label>
+                </div>
+            </div>
+            
+            <!-- День 3 -->
+            <div class="day-card">
+                <div class="day-header">
+                    <span class="day-number">День 3</span>
+                </div>
+                <h3 class="day-title">STLC (цикл тестирования)</h3>
+                <p class="day-task">Сравнить SDLC и STLC</p>
+                <div class="resources">
+                    <a href="https://qastart.ru/stlc-software-testing-life-cycle" class="resource-link" target="_blank">Текст</a>
+                    <a href="https://vk.com/video-123456789_456239018" class="resource-link" target="_blank">Видео</a>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="day3" onchange="updateProgress()">
+                    <label for="day3" class="checkbox-label">Отметить как выполненное</label>
+                </div>
+            </div>
+            
+            <!-- День 4 -->
+            <div class="day-card">
+                <div class="day-header">
+                    <span class="day-number">День 4</span>
+                </div>
+                <h3 class="day-title">Виды тестирования</h3>
+                <p class="day-task">Выписать 10 видов тестирования с примерами</p>
+                <div class="resources">
+                    <a href="https://testengineer.ru/vidy-testirovaniya/" class="resource-link" target="_blank">Текст</a>
+                    <a href="https://rutube.ru/video/9a8b7c6d5e4f3g2h1i0j9k8l7m6n5o4/" class="resource-link" target="_blank">Видео</a>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="day4" onchange="updateProgress()">
+                    <label for="day4" class="checkbox-label">Отметить как выполненное</label>
+                </div>
+            </div>
+            
+            <!-- День 5 -->
+            <div class="day-card">
+                <div class="day-header">
+                    <span class="day-number">День 5</span>
+                </div>
+                <h3 class="day-title">Тест-кейсы</h3>
+                <p class="day-task">Написать 5 тест-кейсов для формы входа ВКонтакте</p>
+                <div class="resources">
+                    <a href="https://testengineer.ru/test-kejsy/" class="resource-link" target="_blank">Гайд</a>
+                    <a href="https://vk.com/video-123456789_456239019" class="resource-link" target="_blank">Пример</a>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="day5" onchange="updateProgress()">
+                    <label for="day5" class="checkbox-label">Отметить как выполненное</label>
+                </div>
+            </div>
+            
+            <!-- День 6 -->
+            <div class="day-card">
+                <div class="day-header">
+                    <span class="day-number">День 6</span>
+                </div>
+                <h3 class="day-title">Чек-листы</h3>
+                <p class="day-task">Создать чек-лист для Яндекс.Почты</p>
+                <div class="resources">
+                    <a href="https://testengineer.ru/chek-list/" class="resource-link" target="_blank">Шаблон</a>
+                    <a href="https://rutube.ru/video/1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6/" class="resource-link" target="_blank">Разбор</a>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="day6" onchange="updateProgress()">
+                    <label for="day6" class="checkbox-label">Отметить как выполненное</label>
+                </div>
+            </div>
+            
+            <!-- День 7 -->
+            <div class="day-card">
+                <div class="day-header">
+                    <span class="day-number">День 7</span>
+                </div>
+                <h3 class="day-title">Баг-репорты</h3>
+                <p class="day-task">Найти 3 бага на DemoQA и оформить отчет</p>
+                <div class="resources">
+                    <a href="https://demoqa.com/" class="resource-link" target="_blank">DemoQA</a>
+                    <a href="https://testengineer.ru/bag-report/" class="resource-link" target="_blank">Пример</a>
+                    <a href="https://vk.com/video-123456789_456239020" class="resource-link" target="_blank">Видео</a>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="day7" onchange="updateProgress()">
+                    <label for="day7" class="checkbox-label">Отметить как выполненное</label>
+                </div>
+            </div>
+            
+            <!-- День 8 -->
+            <div class="day-card">
+                <div class="day-header">
+                    <span class="day-number">День 8</span>
+                </div>
+                <h3 class="day-title">Тест-план</h3>
+                <p class="day-task">Разобрать структуру тест-плана</p>
+                <div class="resources">
+                    <a href="https://qastart.ru/test-plan" class="resource-link" target="_blank">Гайд</a>
+                    <a href="https://rutube.ru/video/2a3b4c5d6e7f8g9h0i1j2k3l4m5n6o7/" class="resource-link" target="_blank">Видео</a>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="day8" onchange="updateProgress()">
+                    <label for="day8" class="checkbox-label">Отметить как выполненное</label>
+                </div>
+            </div>
+            
+            <!-- День 9-30 -->
+            <div class="day-card">
+                <div class="day-header">
+                    <span class="day-number">День 9-30</span>
+                </div>
+                <h3 class="day-title">Практика</h3>
+                <p class="day-task">Тестируем сайты (Яндекс, ВК), пишем отчеты</p>
+                <div class="resources">
+                    <a href="https://github.com/qa-guru/knowledge-base" class="resource-link" target="_blank">Проекты</a>
+                    <a href="https://testengineer.ru/portfolio/" class="resource-link" target="_blank">Примеры отчетов</a>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="day9-30" onchange="updateProgress()">
+                    <label for="day9-30" class="checkbox-label">Отметить как выполненное</label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Месяц 2 -->
+        <div id="month2" class="tab-content">
+            <h2 style="margin-bottom: 15px; color: var(--accent-color);">Инструменты тестировщика</h2>
+            <div class="month-progress" id="month2-progress">Прогресс: 0/30 дней (0%)</div>
+            
+            <!-- День 31 -->
+            <div class="day-card">
+                <div class="day-header">
+                    <span class="day-number">День 31</span>
+                </div>
+                <h3 class="day-title">Jira: создание багов</h3>
+                <p class="day-task">Завести аккаунт, создать 3 бага</p>
+                <div class="resources">
+                    <a href="https://qastart.ru/jira-for-testers" class="resource-link" target="_blank">Гайд</a>
+                    <a href="https://rutube.ru/video/3a4b5c6d7e8f9g0h1i2j3k4l5m6n7o8/" class="resource-link" target="_blank">Видео</a>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="day31" onchange="updateProgress()">
+                    <label for="day31" class="checkbox-label">Отметить как выполненное</label>
+                </div>
+            </div>
+            
+            <!-- День 32 -->
+            <div class="day-card">
+                <div class="day-header">
+                    <span class="day-number">День 32</span>
+                </div>
+                <h3 class="day-title">Тест-кейсы в Jira</h3>
+                <p class="day-task">Добавить 5 тест-кейсов в проект</p>
+                <div class="resources">
+                    <a href="https://testengineer.ru/jira-zond/" class="resource-link" target="_blank">Инструкция</a>
+                    <a href="https://vk.com/video-123456789_456239021" class="resource-link" target="_blank">Видео</a>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="day32" onchange="updateProgress()">
+                    <label for="day32" class="checkbox-label">Отметить как выполненное</label>
+                </div>
+            </div>
+            
+            <!-- День 33 -->
+            <div class="day-card">
+                <div class="day-header">
+                    <span class="day-number">День 33</span>
+                </div>
+                <h3 class="day-title">API: основы</h3>
+                <p class="day-task">Разобрать REST, HTTP-методы</p>
+                <div class="resources">
+                    <a href="https://testengineer.ru/api-testing/" class="resource-link" target="_blank">Текст</a>
+                    <a href="https://rutube.ru/video/4a5b6c7d8e9f0g1h2i3j4k5l6m7n8o9/" class="resource-link" target="_blank">Видео</a>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="day33" onchange="updateProgress()">
+                    <label for="day33" class="checkbox-label">Отметить как выполненное</label>
+                </div>
+            </div>
+            
+            <!-- День 34 -->
+            <div class="day-card">
+                <div class="day-header">
+                    <span class="day-number">День 34</span>
+                </div>
+                <h3 class="day-title">Postman: GET-запросы</h3>
+                <p class="day-task">Отправить запрос к JSONPlaceholder</p>
+                <div class="resources">
+                    <a href="https://testengineer.ru/postman-api/" class="resource-link" target="_blank">Гайд</a>
+                    <a href="https://jsonplaceholder.typicode.com/" class="resource-link" target="_blank">JSONPlaceholder</a>
+                    <a href="https://vk.com/video-123456789_456239022" class="resource-link" target="_blank">Видео</a>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="day34" onchange="updateProgress()">
+                    <label for="day34" class="checkbox-label">Отметить как выполненное</label>
+                </div>
+            </div>
+            
+            <!-- День 35 -->
+            <div class="day-card">
+                <div class="day-header">
+                    <span class="day-number">День 35</span>
+                </div>
+                <h3 class="day-title">Postman: POST, PUT</h3>
+                <p class="day-task">Создать и изменить запись через API</p>
+                <div class="resources">
+                    <a href="https://qastart.ru/postman-api-testing" class="resource-link" target="_blank">Пример</a>
+                    <a href="https://rutube.ru/video/5a6b7c8d9e0f1g2h3i4j5k6l7m8n9o0/" class="resource-link" target="_blank">Видео</a>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="day35" onchange="updateProgress()">
+                    <label for="day35" class="checkbox-label">Отметить как выполненное</label>
+                </div>
+            </div>
+            
+            <!-- День 36 -->
+            <div class="day-card">
+                <div class="day-header">
+                    <span class="day-number">День 36</span>
+                </div>
+                <h3 class="day-title">Charles: перехват трафика</h3>
+                <p class="day-task">Установить, перехватить запросы с телефона</p>
+                <div class="resources">
+                    <a href="https://testengineer.ru/charles-proxy/" class="resource-link" target="_blank">Гайд</a>
+                    <a href="https://vk.com/video-123456789_456239023" class="resource-link" target="_blank">Видео</a>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="day36" onchange="updateProgress()">
+                    <label for="day36" class="checkbox-label">Отметить как выполненное</label>
+                </div>
+            </div>
+            
+            <!-- День 37 -->
+            <div class="day-card">
+                <div class="day-header">
+                    <span class="day-number">День 37</span>
+                </div>
+                <h3 class="day-title">Мобильное тестирование</h3>
+                <p class="day-task">Проверить приложение "Погода" на Android</p>
+                <div class="resources">
+                    <a href="https://qastart.ru/mobile-testing" class="resource-link" target="_blank">Текст</a>
+                    <a href="https://rutube.ru/video/6a7b8c9d0e1f2g3h4i5j6k7l8m9n0o1/" class="resource-link" target="_blank">Видео</a>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="day37" onchange="updateProgress()">
+                    <label for="day37" class="checkbox-label">Отметить как выполненное</label>
+                </div>
+            </div>
+            
+            <!-- День 38-60 -->
+            <div class="day-card">
+                <div class="day-header">
+                    <span class="day-number">День 38-60</span>
+                </div>
+                <h3 class="day-title">Практика</h3>
+                <p class="day-task">Тестируем API, мобильные приложения</p>
+                <div class="resources">
+                    <a href="https://reqres.in/" class="resource-link" target="_blank">Тестовые API</a>
+                    <a href="https://github.com/qa-guru/knowledge-base" class="resource-link" target="_blank">Проекты</a>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="day38-60" onchange="updateProgress()">
+                    <label for="day38-60" class="checkbox-label">Отметить как выполненное</label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Месяц 3 -->
+        <div id="month3" class="tab-content">
+            <h2 style="margin-bottom: 15px; color: var(--accent-color);">Базы данных и SQL</h2>
+            <div class="month-progress" id="month3-progress">Прогресс: 0/30 дней (0%)</div>
+            
+            <!-- День 61 -->
+            <div class="day-card">
+                <div class="day-header">
+                    <span class="day-number">День 61</span>
+                </div>
+                <h3 class="day-title">Установка SQLite</h3>
+                <p class="day-task">Написать первый запрос `SELECT * FROM users`</p>
+                <div class="resources">
+                    <a href="https://testengineer.ru/sql-dlya-testirovshhika/" class="resource-link" target="_blank">Гайд</a>
+                    <a href="https://rutube.ru/video/7a8b9c0d1e2f3g4h5i6j7k8l9m0n1o2/" class="resource-link" target="_blank">Видео</a>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="day61" onchange="updateProgress()">
+                    <label for="day61" class="checkbox-label">Отметить как выполненное</label>
+                </div>
+            </div>
+            
+            <!-- День 62 -->
+            <div class="day-card">
+                <div class="day-header">
+                    <span class="day-number">День 62</span>
+                </div>
+                <h3 class="day-title">SELECT, WHERE</h3>
+                <p class="day-task">Выбрать данные по условию</p>
+                <div class="resources">
+                    <a href="https://sql-academy.org/ru" class="resource-link" target="_blank">Упражнения</a>
+                    <a href="https://vk.com/video-123456789_456239024" class="resource-link" target="_blank">Видео</a>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="day62" onchange="updateProgress()">
+                    <label for="day62" class="checkbox-label">Отметить как выполненное</label>
+                </div>
+            </div>
+            
+            <!-- День 63 -->
+            <div class="day-card">
+                <div class="day-header">
+                    <span class="day-number">День 63</span>
+                </div>
+                <h3 class="day-title">JOIN</h3>
+                <p class="day-task">Соединить 2 таблицы</p>
+                <div class="resources">
+                    <a href="https://qastart.ru/sql-join" class="resource-link" target="_blank">Текст</a>
+                    <a href="https://rutube.ru/video/8a9b0c1d2e3f4g5h6i7j8k9l0m1n2o3/" class="resource-link" target="_blank">Видео</a>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="day63" onchange="updateProgress()">
+                    <label for="day63" class="checkbox-label">Отметить как выполненное</label>
+                </div>
+            </div>
+            
+            <!-- День 64 -->
+            <div class="day-card">
+                <div class="day-header">
+                    <span class="day-number">День 64</span>
+                </div>
+                <h3 class="day-title">GROUP BY</h3>
+                <p class="day-task">Сгруппировать данные по категориям</p>
+                <div class="resources">
+                    <a href="https://testengineer.ru/sql-group-by/" class="resource-link" target="_blank">Пример</a>
+                    <a href="https://vk.com/video-123456789_456239025" class="resource-link" target="_blank">Видео</a>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="day64" onchange="updateProgress()">
+                    <label for="day64" class="checkbox-label">Отметить как выполненное</label>
+                </div>
+            </div>
+            
+            <!-- День 65-90 -->
+            <div class="day-card">
+                <div class="day-header">
+                    <span class="day-number">День 65-90</span>
+                </div>
+                <h3 class="day-title">Практика SQL</h3>
+                <p class="day-task">Решать задачи на SQL Academy</p>
+                <div class="resources">
+                    <a href="https://sql-academy.org/ru" class="resource-link" target="_blank">SQL Academy</a>
+                    <a href="https://stepik.org/course/63054/" class="resource-link" target="_blank">Доп. задания</a>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="day65-90" onchange="updateProgress()">
+                    <label for="day65-90" class="checkbox-label">Отметить как выполненное</label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Месяц 4 -->
+        <div id="month4" class="tab-content">
+            <h2 style="margin-bottom: 15px; color: var(--accent-color);">Автоматизация (Python + Selenium)</h2>
+            <div class="month-progress" id="month4-progress">Прогресс: 0/30 дней (0%)</div>
+            
+            <!-- День 91 -->
+            <div class="day-card">
+                <div class="day-header">
+                    <span class="day-number">День 91</span>
+                </div>
+                <h3 class="day-title">Установка Python</h3>
+                <p class="day-task">Написать `print("Hello QA!")`</p>
+                <div class="resources">
+                    <a href="https://pythonworld.ru/samouchitel-python" class="resource-link" target="_blank">Гайд</a>
+                    <a href="https://rutube.ru/video/9a0b1c2d3e4f5g6h7i8j9k0l1m2n3o4/" class="resource-link" target="_blank">Видео</a>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="day91" onchange="updateProgress()">
+                    <label for="day91" class="checkbox-label">Отметить как выполненное</label>
+                </div>
+            </div>
+            
+            <!-- День 92 -->
+            <div class="day-card">
+                <div class="day-header">
+                    <span class="day-number">День 92</span>
+                </div>
+                <h3 class="day-title">Переменные, типы данных</h3>
+                <p class="day-task">Решить 3 задачи на переменные</p>
+                <div class="resources">
+                    <a href="https://pythontutor.ru/" class="resource-link" target="_blank">Упражнения</a>
+                    <a href="https://vk.com/video-123456789_456239026" class="resource-link" target="_blank">Видео</a>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="day92" onchange="updateProgress()">
+                    <label for="day92" class="checkbox-label">Отметить как выполненное</label>
+                </div>
+            </div>
+            
+            <!-- День 93 -->
+            <div class="day-card">
+                <div class="day-header">
+                    <span class="day-number">День 93</span>
+                </div>
+                <h3 class="day-title">Условия (if-else)</h3>
+                <p class="day-task">Написать проверку пароля</p>
+                <div class="resources">
+                    <a href="https://pythonworld.ru/osnovy/instrukciya-if-elif-else-proverka-istinnosti-trex-meryj-operator.html" class="resource-link" target="_blank">Текст</a>
+                    <a href="https://rutube.ru/video/0a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5/" class="resource-link" target="_blank">Видео</a>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="day93" onchange="updateProgress()">
+                    <label for="day93" class="checkbox-label">Отметить как выполненное</label>
+                </div>
+            </div>
+            
+            <!-- День 94 -->
+            <div class="day-card">
+                <div class="day-header">
+                    <span class="day-number">День 94</span>
+                </div>
+                <h3 class="day-title">Циклы (for, while)</h3>
+                <p class="day-task">Вывести числа от 1 до 10</p>
+                <div class="resources">
+                    <a href="https://pythonworld.ru/cikly-for-i-while-operatory-break-i-continue-volshebnoe-slovo-else.html" class="resource-link" target="_blank">Гайд</a>
+                    <a href="https://vk.com/video-123456789_456239027" class="resource-link" target="_blank">Видео</a>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="day94" onchange="updateProgress()">
+                    <label for="day94" class="checkbox-label">Отметить как выполненное</label>
+                </div>
+            </div>
+            
+            <!-- День 95 -->
+            <div class="day-card">
+                <div class="day-header">
+                    <span class="day-number">День 95</span>
+                </div>
+                <h3 class="day-title">Установка Selenium</h3>
+                <p class="day-task">Настроить WebDriver</p>
+                <div class="resources">
+                    <a href="https://testengineer.ru/selenium-webdriver/" class="resource-link" target="_blank">Гайд</a>
+                    <a href="https://rutube.ru/video/1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6/" class="resource-link" target="_blank">Видео</a>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="day95" onchange="updateProgress()">
+                    <label for="day95" class="checkbox-label">Отметить как выполненное</label>
+                </div>
+            </div>
+            
+            <!-- День 96 -->
+            <div class="day-card">
+                <div class="day-header">
+                    <span class="day-number">День 96</span>
+                </div>
+                <h3 class="day-title">Первый автотест</h3>
+                <p class="day-task">Открыть сайт и проверить заголовок</p>
+                <div class="resources">
+                    <a href="https://qastart.ru/selenium-python" class="resource-link" target="_blank">Пример</a>
+                    <a href="https://vk.com/video-123456789_456239028" class="resource-link" target="_blank">Видео</a>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="day96" onchange="updateProgress()">
+                    <label for="day96" class="checkbox-label">Отметить как выполненное</label>
+                </div>
+            </div>
+            
+            <!-- День 97-120 -->
+            <div class="day-card">
+                <div class="day-header">
+                    <span class="day-number">День 97-120</span>
+                </div>
+                <h3 class="day-title">Практика автоматизации</h3>
+                <p class="day-task">Автоматизировать тесты для DemoQA</p>
+                <div class="resources">
+                    <a href="https://demoqa.com/" class="resource-link" target="_blank">DemoQA</a>
+                    <a href="https://github.com/qa-guru" class="resource-link" target="_blank">Готовые проекты</a>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="day97-120" onchange="updateProgress()">
+                    <label for="day97-120" class="checkbox-label">Отметить как выполненное</label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Месяц 5 -->
+        <div id="month5" class="tab-content">
+            <h2 style="margin-bottom: 15px; color: var(--accent-color);">Подготовка к работе</h2>
+            <div class="month-progress" id="month5-progress">Прогресс: 0/30 дней (0%)</div>
+            
+            <!-- День 121 -->
+            <div class="day-card">
+                <div class="day-header">
+                    <span class="day-number">День 121</span>
+                </div>
+                <h3 class="day-title">Тестовый проект</h3>
+                <p class="day-task">Протестировать PetShop, оформить отчет</p>
+                <div class="resources">
+                    <a href="https://petstore.swagger.io/" class="resource-link" target="_blank">PetShop</a>
+                    <a href="https://testengineer.ru/portfolio/" class="resource-link" target="_blank">Пример отчета</a>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="day121" onchange="updateProgress()">
+                    <label for="day121" class="checkbox-label">Отметить как выполненное</label>
+                </div>
+            </div>
+            
+            <!-- День 122-140 -->
+            <div class="day-card">
+                <div class="day-header">
+                    <span class="day-number">День 122-140</span>
+                </div>
+                <h3 class="day-title">Создание портфолио</h3>
+                <p class="day-task">Оформить все выполненные работы в портфолио</p>
+                <div class="resources">
+                    <a href="https://testengineer.ru/portfolio/" class="resource-link" target="_blank">Примеры</a>
+                    <a href="https://github.com/" class="resource-link" target="_blank">GitHub для хранения</a>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="day122-140" onchange="updateProgress()">
+                    <label for="day122-140" class="checkbox-label">Отметить как выполненное</label>
+                </div>
+            </div>
+            
+            <!-- День 141-150 -->
+            <div class="day-card">
+                <div class="day-header">
+                    <span class="day-number">День 141-150</span>
+                </div>
+                <h3 class="day-title">Подготовка к собеседованию</h3>
+                <p class="day-task">Разобрать 50+ вопросов на собеседование</p>
+                <div class="resources">
+                    <a href="https://qastart.ru/qa-interview" class="resource-link" target="_blank">Вопросы</a>
+                    <a href="https://rutube.ru/video/2a3b4c5d6e7f8g9h0i1j2k3l4m5n6o7/" class="resource-link" target="_blank">Разбор</a>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="day141-150" onchange="updateProgress()">
+                    <label for="day141-150" class="checkbox-label">Отметить как выполненное</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Инициализация данных
+        const daysData = [
+            // Месяц 1 (30 дней)
+            { id: 'day1', month: 1 }, { id: 'day2', month: 1 }, { id: 'day3', month: 1 },
+            { id: 'day4', month: 1 }, { id: 'day5', month: 1 }, { id: 'day6', month: 1 },
+            { id: 'day7', month: 1 }, { id: 'day8', month: 1 }, { id: 'day9-30', month: 1 },
+            
+            // Месяц 2 (30 дней)
+            { id: 'day31', month: 2 }, { id: 'day32', month: 2 }, { id: 'day33', month: 2 },
+            { id: 'day34', month: 2 }, { id: 'day35', month: 2 }, { id: 'day36', month: 2 },
+            { id: 'day37', month: 2 }, { id: 'day38-60', month: 2 },
+            
+            // Месяц 3 (30 дней)
+            { id: 'day61', month: 3 }, { id: 'day62', month: 3 }, { id: 'day63', month: 3 },
+            { id: 'day64', month: 3 }, { id: 'day65-90', month: 3 },
+            
+            // Месяц 4 (30 дней)
+            { id: 'day91', month: 4 }, { id: 'day92', month: 4 }, { id: 'day93', month: 4 },
+            { id: 'day94', month: 4 }, { id: 'day95', month: 4 }, { id: 'day96', month: 4 },
+            { id: 'day97-120', month: 4 },
+            
+            // Месяц 5 (30 дней)
+            { id: 'day121', month: 5 }, { id: 'day122-140', month: 5 }, { id: 'day141-150', month: 5 }
+        ];
+
+        // Функция для переключения вкладок
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].className = tabcontent[i].className.replace(" active", "");
+            }
+            
+            tablinks = document.getElementsByClassName("tab");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            
+            document.getElementById(tabName).className += " active";
+            evt.currentTarget.className += " active";
+        }
+        
+        // Функция для обновления прогресса
+        function updateProgress() {
+            // Общий прогресс
+            const totalDays = 150;
+            let completedDays = 0;
+            
+            // Прогресс по месяцам
+            const monthProgress = [0, 0, 0, 0, 0];
+            const monthTotals = [30, 30, 30, 30, 30];
+            
+            // Проверяем все чекбоксы
+            daysData.forEach(day => {
+                const checkbox = document.getElementById(day.id);
+                if (checkbox && checkbox.checked) {
+                    completedDays++;
+                    monthProgress[day.month - 1]++;
+                }
+            });
+            
+            // Обновляем общий прогресс
+            const overallProgress = Math.round((completedDays / totalDays) * 100);
+            document.getElementById('overall-progress').style.width = overallProgress + '%';
+            document.getElementById('progress-text').textContent = overallProgress + '% завершено (' + completedDays + '/150 дней)';
+            
+            // Обновляем прогресс по месяцам
+            for (let i = 1; i <= 5; i++) {
+                const monthCompleted = monthProgress[i - 1];
+                const monthTotal = monthTotals[i - 1];
+                const monthPercent = Math.round((monthCompleted / monthTotal) * 100);
+                document.getElementById(`month${i}-progress`).textContent = 
+                    `Прогресс: ${monthCompleted}/${monthTotal} дней (${monthPercent}%)`;
+            }
+            
+            // Сохраняем прогресс в localStorage
+            saveProgress();
+        }
+        
+        // Сохранение прогресса в localStorage
+        function saveProgress() {
+            const progressData = {};
+            daysData.forEach(day => {
+                const checkbox = document.getElementById(day.id);
+                if (checkbox) {
+                    progressData[day.id] = checkbox.checked;
+                }
+            });
+            localStorage.setItem('qaProgress', JSON.stringify(progressData));
+        }
+        
+        // Загрузка прогресса из localStorage
+        function loadProgress() {
+            const savedProgress = localStorage.getItem('qaProgress');
+            if (savedProgress) {
+                const progressData = JSON.parse(savedProgress);
+                Object.keys(progressData).forEach(id => {
+                    const checkbox = document.getElementById(id);
+                    if (checkbox) {
+                        checkbox.checked = progressData[id];
+                    }
+                });
+                updateProgress();
+            }
+        }
+        
+        // Инициализация при загрузке страницы
+        window.onload = function() {
+            loadProgress();
+            
+            // Проверяем, есть ли hash в URL для открытия нужной вкладки
+            if (window.location.hash) {
+                const tabName = window.location.hash.substring(1);
+                const tab = document.querySelector(`.tab[onclick*="${tabName}"]`);
+                if (tab) {
+                    tab.click();
+                }
+            }
+        };
+    </script>
+</body>
+</html>
