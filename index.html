@@ -1,951 +1,1140 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>QA Learning Plan</title>
-    <style>
-        :root {
-            --bg-dark: #121212;
-            --card-dark: #1e1e1e;
-            --text-primary: #ffffff;
-            --text-secondary: #b3b3b3;
-            --accent-color: #e1306c;
-            --progress-color: #4CAF50;
-            --tab-active: #e1306c;
-            --tab-inactive: #555;
-        }
-        
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
-        
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-primary);
-            padding: 0;
-            margin: 0;
-            min-height: 100vh;
-            -webkit-font-smoothing: antialiased;
-        }
-        
-        .container {
-            max-width: 100%;
-            padding: 15px;
-            margin: 0 auto;
-        }
-        
-        .header {
-            text-align: center;
-            padding: 20px 0;
-            border-bottom: 1px solid #333;
-            margin-bottom: 15px;
-        }
-        
-        .header h1 {
-            font-size: 24px;
-            color: var(--text-primary);
-            margin-bottom: 5px;
-        }
-        
-        .header p {
-            color: var(--text-secondary);
-            font-size: 14px;
-        }
-        
-        .tabs {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 15px;
-            border-bottom: 1px solid #333;
-            padding-bottom: 10px;
-            overflow-x: auto;
-            white-space: nowrap;
-        }
-        
-        .tab {
-            padding: 10px 15px;
-            cursor: pointer;
-            color: var(--text-secondary);
-            font-weight: 500;
-            font-size: 14px;
-            border-radius: 20px;
-            transition: all 0.3s ease;
-            flex-shrink: 0;
-        }
-        
-        .tab.active {
-            background-color: var(--tab-active);
-            color: white;
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        .progress-container {
-            width: 100%;
-            background-color: #333;
-            border-radius: 10px;
-            margin: 15px 0;
-            overflow: hidden;
-        }
-        
-        .progress-bar {
-            height: 8px;
-            background-color: var(--progress-color);
-            border-radius: 10px;
-            transition: width 0.5s ease;
-        }
-        
-        .progress-text {
-            text-align: center;
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-top: 5px;
-        }
-        
-        .month-progress {
-            margin: 10px 0;
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-        
-        .day-card {
-            background-color: var(--card-dark);
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            border-left: 4px solid var(--accent-color);
-        }
-        
-        .day-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        
-        .day-number {
-            font-weight: bold;
-            color: var(--accent-color);
-            font-size: 16px;
-        }
-        
-        .day-title {
-            font-size: 16px;
-            font-weight: 500;
-        }
-        
-        .day-task {
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-bottom: 10px;
-            line-height: 1.4;
-        }
-        
-        .resources {
-            margin-top: 10px;
-        }
-        
-        .resource-link {
-            display: inline-block;
-            background-color: #333;
-            color: var(--text-primary);
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 12px;
-            margin-right: 5px;
-            margin-bottom: 5px;
-            text-decoration: none;
-        }
-        
-        .resource-link:hover {
-            background-color: var(--accent-color);
-        }
-        
-        .checkbox-container {
-            display: flex;
-            align-items: center;
-            margin-top: 10px;
-        }
-        
-        .checkbox-label {
-            margin-left: 8px;
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-        
-        .custom-checkbox {
-            appearance: none;
-            -webkit-appearance: none;
-            width: 18px;
-            height: 18px;
-            border: 2px solid var(--text-secondary);
-            border-radius: 4px;
-            outline: none;
-            cursor: pointer;
-            position: relative;
-        }
-        
-        .custom-checkbox:checked {
-            background-color: var(--accent-color);
-            border-color: var(--accent-color);
-        }
-        
-        .custom-checkbox:checked::after {
-            content: "✓";
-            position: absolute;
-            color: white;
-            font-size: 12px;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-        
-        @media (max-width: 375px) {
-            .tab {
-                padding: 8px 12px;
-                font-size: 12px;
-            }
-            
-            .day-card {
-                padding: 12px;
-            }
-            
-            .day-title {
-                font-size: 15px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>zerixxx // дневник</title>
+  <!-- Шрифты -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <!-- EasyMDE (Markdown редактор) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde@2.18.0/dist/easymde.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/easymde@2.18.0/dist/easymde.min.js"></script>
+  
+  <!-- Firebase SDK (compat, для простоты) -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+
+  <style>
+    /* ===== ПЕРЕМЕННЫЕ ===== */
+    :root {
+      --bg: #0b0b0b;
+      --card-bg: #111;
+      --text: #c0c0c0;
+      --text-dim: #666;
+      --neon-green: #00ff41;
+      --neon-purple: #b300ff;
+      --border: #333;
+      --font-mono: 'JetBrains Mono', monospace;
+      --font-pixel: 'Press Start 2P', cursive;
+      --glow-green: 0 0 12px rgba(0, 255, 65, 0.25);
+      --glow-purple: 0 0 12px rgba(179, 0, 255, 0.25);
+    }
+
+    /* ===== СБРОС ===== */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 16px;
+      line-height: 1.7;
+      padding: 1.2rem;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    a {
+      color: var(--neon-green);
+      text-decoration: none;
+      transition: 0.2s;
+    }
+    a:hover {
+      text-shadow: var(--glow-green);
+    }
+    img, video, iframe {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 6px;
+    }
+
+    /* ===== ШАПКА ===== */
+    header {
+      border-bottom: 2px solid var(--neon-green);
+      padding-bottom: 0.6rem;
+      margin-bottom: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+    }
+    .logo {
+      font-family: var(--font-pixel);
+      font-size: 1.6rem;
+      color: var(--neon-green);
+      text-shadow: var(--glow-green);
+      letter-spacing: 1px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .logo span {
+      color: var(--neon-purple);
+      text-shadow: var(--glow-purple);
+    }
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+    }
+    nav a {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text);
+      border-bottom: 2px solid transparent;
+      padding-bottom: 0.2rem;
+      transition: 0.2s;
+      cursor: pointer;
+    }
+    nav a:hover,
+    nav a.active {
+      color: var(--neon-green);
+      border-bottom-color: var(--neon-green);
+      text-shadow: var(--glow-green);
+    }
+
+    /* ===== ОСНОВНОЙ КОНТЕЙНЕР ===== */
+    main {
+      flex: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .page {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+    .page.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== КАРТОЧКИ ===== */
+    .posts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.5rem;
+      margin: 1.8rem 0;
+    }
+    .post-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 1.2rem;
+      border-radius: 8px;
+      transition: 0.25s;
+      cursor: pointer;
+    }
+    .post-card:hover {
+      border-color: var(--neon-green);
+      box-shadow: var(--glow-green);
+    }
+    .post-card h3 {
+      color: var(--neon-green);
+      font-size: 1.1rem;
+      margin-bottom: 0.3rem;
+    }
+    .post-card .meta {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      margin-bottom: 0.5rem;
+    }
+    .post-card p {
+      color: #aaa;
+      font-size: 0.95rem;
+    }
+
+    /* ===== ДЕТАЛЬНАЯ СТАТЬЯ ===== */
+    #post-detail {
+      padding: 1rem 0;
+    }
+    #post-detail .back-link {
+      display: inline-block;
+      margin-bottom: 1.5rem;
+      color: var(--neon-purple);
+      cursor: pointer;
+    }
+    #post-detail .back-link i {
+      margin-right: 0.5rem;
+    }
+    #post-detail h1 {
+      color: var(--neon-green);
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    #post-detail .post-meta {
+      color: var(--text-dim);
+      margin-bottom: 1.5rem;
+    }
+    #post-detail .post-content {
+      color: #d0d0d0;
+    }
+    #post-detail .post-content p {
+      margin-bottom: 1rem;
+    }
+    #post-detail .post-content img {
+      margin: 1rem 0;
+      border: 1px solid var(--border);
+      max-width: 100%;
+    }
+    #post-detail .post-content pre {
+      background: #1a1a1a;
+      padding: 1rem;
+      border-radius: 6px;
+      overflow-x: auto;
+      border-left: 3px solid var(--neon-green);
+      font-size: 0.9rem;
+    }
+    #post-detail .post-content blockquote {
+      border-left: 3px solid var(--neon-purple);
+      padding-left: 1rem;
+      color: #aaa;
+      margin: 1rem 0;
+    }
+    #post-detail .post-content ul, 
+    #post-detail .post-content ol {
+      padding-left: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    /* ===== ВИДЕО ===== */
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.8rem;
+      margin: 1.8rem 0;
+    }
+    .video-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.8rem;
+      transition: 0.25s;
+    }
+    .video-item:hover {
+      border-color: var(--neon-purple);
+      box-shadow: var(--glow-purple);
+    }
+    .video-item iframe {
+      aspect-ratio: 16 / 9;
+      width: 100%;
+      border-radius: 4px;
+      background: #000;
+    }
+    .video-item h4 {
+      color: var(--neon-purple);
+      margin: 0.6rem 0 0.2rem;
+      font-size: 1rem;
+    }
+
+    /* ===== КОНТАКТЫ ===== */
+    .contacts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .contact-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: var(--card-bg);
+      padding: 0.6rem 1.4rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.95rem;
+      transition: 0.2s;
+      color: var(--text);
+    }
+    .contact-btn i {
+      font-size: 1.3rem;
+      width: 1.4rem;
+      text-align: center;
+    }
+    .contact-btn:hover {
+      border-color: var(--neon-green);
+      background: #1a1a1a;
+      box-shadow: var(--glow-green);
+      color: var(--neon-green);
+    }
+
+    /* ===== СТРАНИЦА ЛОГИНА ===== */
+    .login-box {
+      max-width: 400px;
+      margin: 3rem auto;
+      background: var(--card-bg);
+      padding: 2rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      text-align: center;
+    }
+    .login-box h2 {
+      color: var(--neon-green);
+      margin-bottom: 1.5rem;
+      font-family: var(--font-pixel);
+      font-size: 1.2rem;
+    }
+    .login-box input {
+      width: 100%;
+      padding: 0.7rem;
+      margin-bottom: 1rem;
+      background: #1a1a1a;
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 1rem;
+    }
+    .login-box input:focus {
+      outline: none;
+      border-color: var(--neon-green);
+    }
+    .login-box button {
+      width: 100%;
+      padding: 0.7rem;
+      background: var(--neon-green);
+      border: none;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.2s;
+      color: #000;
+    }
+    .login-box button:hover {
+      box-shadow: var(--glow-green);
+    }
+    .login-box .error {
+      color: #ff0040;
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+    }
+    .login-box .info {
+      color: var(--text-dim);
+      margin-top: 1rem;
+      font-size: 0.8rem;
+    }
+
+    /* ===== АДМИНКА ===== */
+    .admin-tools {
+      margin: 1.5rem 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+    }
+    .admin-tools button {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 0.9rem;
+    }
+    .admin-tools button:hover {
+      border-color: var(--neon-green);
+      color: var(--neon-green);
+      box-shadow: var(--glow-green);
+    }
+    .admin-tools button.danger:hover {
+      border-color: #ff0040;
+      color: #ff0040;
+      box-shadow: 0 0 12px rgba(255, 0, 64, 0.25);
+    }
+    .admin-list {
+      margin: 1rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .admin-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 0.8rem 1rem;
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .admin-item .title {
+      color: var(--neon-green);
+    }
+    .admin-item .actions button {
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      margin-left: 0.5rem;
+      font-size: 1rem;
+      transition: 0.2s;
+    }
+    .admin-item .actions button:hover {
+      color: var(--neon-green);
+    }
+    .admin-item .actions button.del:hover {
+      color: #ff0040;
+    }
+
+    .admin-form {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+    }
+    .admin-form label {
+      display: block;
+      margin: 0.8rem 0 0.3rem;
+      font-size: 0.9rem;
+      color: var(--text-dim);
+    }
+    .admin-form input, 
+    .admin-form textarea {
+      width: 100%;
+      background: #1a1a1a;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.6rem;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+    }
+    .admin-form input:focus, 
+    .admin-form textarea:focus {
+      outline: none;
+      border-color: var(--neon-green);
+    }
+    .admin-form .row {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .admin-form .row > * {
+      flex: 1 1 200px;
+    }
+    .admin-form button {
+      margin-top: 1rem;
+      background: var(--neon-green);
+      color: #000;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .admin-form button:hover {
+      box-shadow: var(--glow-green);
+    }
+    .admin-form .cancel-btn {
+      background: #333;
+      color: var(--text);
+      margin-left: 0.5rem;
+    }
+    .admin-form .cancel-btn:hover {
+      background: #555;
+    }
+
+    /* ===== ФУТЕР ===== */
+    footer {
+      margin-top: 3rem;
+      border-top: 1px solid #222;
+      padding-top: 1rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+    }
+    footer .term {
+      color: var(--neon-green);
+      font-weight: 700;
+    }
+    footer .cursor {
+      display: inline-block;
+      width: 10px;
+      height: 1.2rem;
+      background: var(--neon-green);
+      vertical-align: text-bottom;
+      margin-left: 4px;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* ===== АДАПТИВ ===== */
+    @media (max-width: 640px) {
+      body { padding: 0.8rem; }
+      .logo { font-size: 1.2rem; }
+      nav { gap: 0.7rem; }
+      nav a { font-size: 0.7rem; }
+      .posts-grid,
+      .video-grid { grid-template-columns: 1fr; }
+      .contact-btn { width: 100%; justify-content: center; }
+      #post-detail h1 { font-size: 1.5rem; }
+      .admin-form .row { flex-direction: column; }
+    }
+    @media (min-width: 641px) and (max-width: 1024px) {
+      .posts-grid { grid-template-columns: repeat(2, 1fr); }
+      .video-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .hidden { display: none !important; }
+  </style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>QA Learning Plan</h1>
-            <p>5-месячный путь к профессии тестировщика</p>
-        </div>
-        
-        <div class="progress-container">
-            <div class="progress-bar" id="overall-progress" style="width: 0%"></div>
-        </div>
-        <div class="progress-text" id="progress-text">0% завершено</div>
-        
-        <div class="tabs">
-            <div class="tab active" onclick="openTab(event, 'month1')">Месяц 1</div>
-            <div class="tab" onclick="openTab(event, 'month2')">Месяц 2</div>
-            <div class="tab" onclick="openTab(event, 'month3')">Месяц 3</div>
-            <div class="tab" onclick="openTab(event, 'month4')">Месяц 4</div>
-            <div class="tab" onclick="openTab(event, 'month5')">Месяц 5</div>
-        </div>
-        
-        <!-- Месяц 1 -->
-        <div id="month1" class="tab-content active">
-            <h2 style="margin-bottom: 15px; color: var(--accent-color);">Основы тестирования</h2>
-            <div class="month-progress" id="month1-progress">Прогресс: 0/30 дней (0%)</div>
-            
-            <!-- День 1 -->
-            <div class="day-card">
-                <div class="day-header">
-                    <span class="day-number">День 1</span>
-                </div>
-                <h3 class="day-title">Кто такой тестировщик?</h3>
-                <p class="day-task">Конспект: 5 главных обязанностей QA</p>
-                <div class="resources">
-                    <a href="https://habr.com/ru/articles/549054/" class="resource-link" target="_blank">Текст</a>
-                    <a href="https://rutube.ru/video/6b5a5f3b8c7f1a2f5e5e5e5e5e5e5e5/" class="resource-link" target="_blank">Видео 1</a>
-                    <a href="https://vk.com/video-123456789_456239017" class="resource-link" target="_blank">Видео 2</a>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="day1" onchange="updateProgress()">
-                    <label for="day1" class="checkbox-label">Отметить как выполненное</label>
-                </div>
-            </div>
-            
-            <!-- День 2 -->
-            <div class="day-card">
-                <div class="day-header">
-                    <span class="day-number">День 2</span>
-                </div>
-                <h3 class="day-title">SDLC (цикл разработки)</h3>
-                <p class="day-task">Нарисовать схему этапов</p>
-                <div class="resources">
-                    <a href="https://qastart.ru/sdlc-software-development-life-cycle" class="resource-link" target="_blank">Текст</a>
-                    <a href="https://rutube.ru/video/3a2b1c4d5e6f7g8h9i0j1k2l3m4n5o6/" class="resource-link" target="_blank">Видео</a>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="day2" onchange="updateProgress()">
-                    <label for="day2" class="checkbox-label">Отметить как выполненное</label>
-                </div>
-            </div>
-            
-            <!-- День 3 -->
-            <div class="day-card">
-                <div class="day-header">
-                    <span class="day-number">День 3</span>
-                </div>
-                <h3 class="day-title">STLC (цикл тестирования)</h3>
-                <p class="day-task">Сравнить SDLC и STLC</p>
-                <div class="resources">
-                    <a href="https://qastart.ru/stlc-software-testing-life-cycle" class="resource-link" target="_blank">Текст</a>
-                    <a href="https://vk.com/video-123456789_456239018" class="resource-link" target="_blank">Видео</a>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="day3" onchange="updateProgress()">
-                    <label for="day3" class="checkbox-label">Отметить как выполненное</label>
-                </div>
-            </div>
-            
-            <!-- День 4 -->
-            <div class="day-card">
-                <div class="day-header">
-                    <span class="day-number">День 4</span>
-                </div>
-                <h3 class="day-title">Виды тестирования</h3>
-                <p class="day-task">Выписать 10 видов тестирования с примерами</p>
-                <div class="resources">
-                    <a href="https://testengineer.ru/vidy-testirovaniya/" class="resource-link" target="_blank">Текст</a>
-                    <a href="https://rutube.ru/video/9a8b7c6d5e4f3g2h1i0j9k8l7m6n5o4/" class="resource-link" target="_blank">Видео</a>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="day4" onchange="updateProgress()">
-                    <label for="day4" class="checkbox-label">Отметить как выполненное</label>
-                </div>
-            </div>
-            
-            <!-- День 5 -->
-            <div class="day-card">
-                <div class="day-header">
-                    <span class="day-number">День 5</span>
-                </div>
-                <h3 class="day-title">Тест-кейсы</h3>
-                <p class="day-task">Написать 5 тест-кейсов для формы входа ВКонтакте</p>
-                <div class="resources">
-                    <a href="https://testengineer.ru/test-kejsy/" class="resource-link" target="_blank">Гайд</a>
-                    <a href="https://vk.com/video-123456789_456239019" class="resource-link" target="_blank">Пример</a>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="day5" onchange="updateProgress()">
-                    <label for="day5" class="checkbox-label">Отметить как выполненное</label>
-                </div>
-            </div>
-            
-            <!-- День 6 -->
-            <div class="day-card">
-                <div class="day-header">
-                    <span class="day-number">День 6</span>
-                </div>
-                <h3 class="day-title">Чек-листы</h3>
-                <p class="day-task">Создать чек-лист для Яндекс.Почты</p>
-                <div class="resources">
-                    <a href="https://testengineer.ru/chek-list/" class="resource-link" target="_blank">Шаблон</a>
-                    <a href="https://rutube.ru/video/1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6/" class="resource-link" target="_blank">Разбор</a>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="day6" onchange="updateProgress()">
-                    <label for="day6" class="checkbox-label">Отметить как выполненное</label>
-                </div>
-            </div>
-            
-            <!-- День 7 -->
-            <div class="day-card">
-                <div class="day-header">
-                    <span class="day-number">День 7</span>
-                </div>
-                <h3 class="day-title">Баг-репорты</h3>
-                <p class="day-task">Найти 3 бага на DemoQA и оформить отчет</p>
-                <div class="resources">
-                    <a href="https://demoqa.com/" class="resource-link" target="_blank">DemoQA</a>
-                    <a href="https://testengineer.ru/bag-report/" class="resource-link" target="_blank">Пример</a>
-                    <a href="https://vk.com/video-123456789_456239020" class="resource-link" target="_blank">Видео</a>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="day7" onchange="updateProgress()">
-                    <label for="day7" class="checkbox-label">Отметить как выполненное</label>
-                </div>
-            </div>
-            
-            <!-- День 8 -->
-            <div class="day-card">
-                <div class="day-header">
-                    <span class="day-number">День 8</span>
-                </div>
-                <h3 class="day-title">Тест-план</h3>
-                <p class="day-task">Разобрать структуру тест-плана</p>
-                <div class="resources">
-                    <a href="https://qastart.ru/test-plan" class="resource-link" target="_blank">Гайд</a>
-                    <a href="https://rutube.ru/video/2a3b4c5d6e7f8g9h0i1j2k3l4m5n6o7/" class="resource-link" target="_blank">Видео</a>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="day8" onchange="updateProgress()">
-                    <label for="day8" class="checkbox-label">Отметить как выполненное</label>
-                </div>
-            </div>
-            
-            <!-- День 9-30 -->
-            <div class="day-card">
-                <div class="day-header">
-                    <span class="day-number">День 9-30</span>
-                </div>
-                <h3 class="day-title">Практика</h3>
-                <p class="day-task">Тестируем сайты (Яндекс, ВК), пишем отчеты</p>
-                <div class="resources">
-                    <a href="https://github.com/qa-guru/knowledge-base" class="resource-link" target="_blank">Проекты</a>
-                    <a href="https://testengineer.ru/portfolio/" class="resource-link" target="_blank">Примеры отчетов</a>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="day9-30" onchange="updateProgress()">
-                    <label for="day9-30" class="checkbox-label">Отметить как выполненное</label>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Месяц 2 -->
-        <div id="month2" class="tab-content">
-            <h2 style="margin-bottom: 15px; color: var(--accent-color);">Инструменты тестировщика</h2>
-            <div class="month-progress" id="month2-progress">Прогресс: 0/30 дней (0%)</div>
-            
-            <!-- День 31 -->
-            <div class="day-card">
-                <div class="day-header">
-                    <span class="day-number">День 31</span>
-                </div>
-                <h3 class="day-title">Jira: создание багов</h3>
-                <p class="day-task">Завести аккаунт, создать 3 бага</p>
-                <div class="resources">
-                    <a href="https://qastart.ru/jira-for-testers" class="resource-link" target="_blank">Гайд</a>
-                    <a href="https://rutube.ru/video/3a4b5c6d7e8f9g0h1i2j3k4l5m6n7o8/" class="resource-link" target="_blank">Видео</a>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="day31" onchange="updateProgress()">
-                    <label for="day31" class="checkbox-label">Отметить как выполненное</label>
-                </div>
-            </div>
-            
-            <!-- День 32 -->
-            <div class="day-card">
-                <div class="day-header">
-                    <span class="day-number">День 32</span>
-                </div>
-                <h3 class="day-title">Тест-кейсы в Jira</h3>
-                <p class="day-task">Добавить 5 тест-кейсов в проект</p>
-                <div class="resources">
-                    <a href="https://testengineer.ru/jira-zond/" class="resource-link" target="_blank">Инструкция</a>
-                    <a href="https://vk.com/video-123456789_456239021" class="resource-link" target="_blank">Видео</a>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="day32" onchange="updateProgress()">
-                    <label for="day32" class="checkbox-label">Отметить как выполненное</label>
-                </div>
-            </div>
-            
-            <!-- День 33 -->
-            <div class="day-card">
-                <div class="day-header">
-                    <span class="day-number">День 33</span>
-                </div>
-                <h3 class="day-title">API: основы</h3>
-                <p class="day-task">Разобрать REST, HTTP-методы</p>
-                <div class="resources">
-                    <a href="https://testengineer.ru/api-testing/" class="resource-link" target="_blank">Текст</a>
-                    <a href="https://rutube.ru/video/4a5b6c7d8e9f0g1h2i3j4k5l6m7n8o9/" class="resource-link" target="_blank">Видео</a>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="day33" onchange="updateProgress()">
-                    <label for="day33" class="checkbox-label">Отметить как выполненное</label>
-                </div>
-            </div>
-            
-            <!-- День 34 -->
-            <div class="day-card">
-                <div class="day-header">
-                    <span class="day-number">День 34</span>
-                </div>
-                <h3 class="day-title">Postman: GET-запросы</h3>
-                <p class="day-task">Отправить запрос к JSONPlaceholder</p>
-                <div class="resources">
-                    <a href="https://testengineer.ru/postman-api/" class="resource-link" target="_blank">Гайд</a>
-                    <a href="https://jsonplaceholder.typicode.com/" class="resource-link" target="_blank">JSONPlaceholder</a>
-                    <a href="https://vk.com/video-123456789_456239022" class="resource-link" target="_blank">Видео</a>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="day34" onchange="updateProgress()">
-                    <label for="day34" class="checkbox-label">Отметить как выполненное</label>
-                </div>
-            </div>
-            
-            <!-- День 35 -->
-            <div class="day-card">
-                <div class="day-header">
-                    <span class="day-number">День 35</span>
-                </div>
-                <h3 class="day-title">Postman: POST, PUT</h3>
-                <p class="day-task">Создать и изменить запись через API</p>
-                <div class="resources">
-                    <a href="https://qastart.ru/postman-api-testing" class="resource-link" target="_blank">Пример</a>
-                    <a href="https://rutube.ru/video/5a6b7c8d9e0f1g2h3i4j5k6l7m8n9o0/" class="resource-link" target="_blank">Видео</a>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="day35" onchange="updateProgress()">
-                    <label for="day35" class="checkbox-label">Отметить как выполненное</label>
-                </div>
-            </div>
-            
-            <!-- День 36 -->
-            <div class="day-card">
-                <div class="day-header">
-                    <span class="day-number">День 36</span>
-                </div>
-                <h3 class="day-title">Charles: перехват трафика</h3>
-                <p class="day-task">Установить, перехватить запросы с телефона</p>
-                <div class="resources">
-                    <a href="https://testengineer.ru/charles-proxy/" class="resource-link" target="_blank">Гайд</a>
-                    <a href="https://vk.com/video-123456789_456239023" class="resource-link" target="_blank">Видео</a>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="day36" onchange="updateProgress()">
-                    <label for="day36" class="checkbox-label">Отметить как выполненное</label>
-                </div>
-            </div>
-            
-            <!-- День 37 -->
-            <div class="day-card">
-                <div class="day-header">
-                    <span class="day-number">День 37</span>
-                </div>
-                <h3 class="day-title">Мобильное тестирование</h3>
-                <p class="day-task">Проверить приложение "Погода" на Android</p>
-                <div class="resources">
-                    <a href="https://qastart.ru/mobile-testing" class="resource-link" target="_blank">Текст</a>
-                    <a href="https://rutube.ru/video/6a7b8c9d0e1f2g3h4i5j6k7l8m9n0o1/" class="resource-link" target="_blank">Видео</a>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="day37" onchange="updateProgress()">
-                    <label for="day37" class="checkbox-label">Отметить как выполненное</label>
-                </div>
-            </div>
-            
-            <!-- День 38-60 -->
-            <div class="day-card">
-                <div class="day-header">
-                    <span class="day-number">День 38-60</span>
-                </div>
-                <h3 class="day-title">Практика</h3>
-                <p class="day-task">Тестируем API, мобильные приложения</p>
-                <div class="resources">
-                    <a href="https://reqres.in/" class="resource-link" target="_blank">Тестовые API</a>
-                    <a href="https://github.com/qa-guru/knowledge-base" class="resource-link" target="_blank">Проекты</a>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="day38-60" onchange="updateProgress()">
-                    <label for="day38-60" class="checkbox-label">Отметить как выполненное</label>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Месяц 3 -->
-        <div id="month3" class="tab-content">
-            <h2 style="margin-bottom: 15px; color: var(--accent-color);">Базы данных и SQL</h2>
-            <div class="month-progress" id="month3-progress">Прогресс: 0/30 дней (0%)</div>
-            
-            <!-- День 61 -->
-            <div class="day-card">
-                <div class="day-header">
-                    <span class="day-number">День 61</span>
-                </div>
-                <h3 class="day-title">Установка SQLite</h3>
-                <p class="day-task">Написать первый запрос `SELECT * FROM users`</p>
-                <div class="resources">
-                    <a href="https://testengineer.ru/sql-dlya-testirovshhika/" class="resource-link" target="_blank">Гайд</a>
-                    <a href="https://rutube.ru/video/7a8b9c0d1e2f3g4h5i6j7k8l9m0n1o2/" class="resource-link" target="_blank">Видео</a>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="day61" onchange="updateProgress()">
-                    <label for="day61" class="checkbox-label">Отметить как выполненное</label>
-                </div>
-            </div>
-            
-            <!-- День 62 -->
-            <div class="day-card">
-                <div class="day-header">
-                    <span class="day-number">День 62</span>
-                </div>
-                <h3 class="day-title">SELECT, WHERE</h3>
-                <p class="day-task">Выбрать данные по условию</p>
-                <div class="resources">
-                    <a href="https://sql-academy.org/ru" class="resource-link" target="_blank">Упражнения</a>
-                    <a href="https://vk.com/video-123456789_456239024" class="resource-link" target="_blank">Видео</a>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="day62" onchange="updateProgress()">
-                    <label for="day62" class="checkbox-label">Отметить как выполненное</label>
-                </div>
-            </div>
-            
-            <!-- День 63 -->
-            <div class="day-card">
-                <div class="day-header">
-                    <span class="day-number">День 63</span>
-                </div>
-                <h3 class="day-title">JOIN</h3>
-                <p class="day-task">Соединить 2 таблицы</p>
-                <div class="resources">
-                    <a href="https://qastart.ru/sql-join" class="resource-link" target="_blank">Текст</a>
-                    <a href="https://rutube.ru/video/8a9b0c1d2e3f4g5h6i7j8k9l0m1n2o3/" class="resource-link" target="_blank">Видео</a>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="day63" onchange="updateProgress()">
-                    <label for="day63" class="checkbox-label">Отметить как выполненное</label>
-                </div>
-            </div>
-            
-            <!-- День 64 -->
-            <div class="day-card">
-                <div class="day-header">
-                    <span class="day-number">День 64</span>
-                </div>
-                <h3 class="day-title">GROUP BY</h3>
-                <p class="day-task">Сгруппировать данные по категориям</p>
-                <div class="resources">
-                    <a href="https://testengineer.ru/sql-group-by/" class="resource-link" target="_blank">Пример</a>
-                    <a href="https://vk.com/video-123456789_456239025" class="resource-link" target="_blank">Видео</a>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="day64" onchange="updateProgress()">
-                    <label for="day64" class="checkbox-label">Отметить как выполненное</label>
-                </div>
-            </div>
-            
-            <!-- День 65-90 -->
-            <div class="day-card">
-                <div class="day-header">
-                    <span class="day-number">День 65-90</span>
-                </div>
-                <h3 class="day-title">Практика SQL</h3>
-                <p class="day-task">Решать задачи на SQL Academy</p>
-                <div class="resources">
-                    <a href="https://sql-academy.org/ru" class="resource-link" target="_blank">SQL Academy</a>
-                    <a href="https://stepik.org/course/63054/" class="resource-link" target="_blank">Доп. задания</a>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="day65-90" onchange="updateProgress()">
-                    <label for="day65-90" class="checkbox-label">Отметить как выполненное</label>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Месяц 4 -->
-        <div id="month4" class="tab-content">
-            <h2 style="margin-bottom: 15px; color: var(--accent-color);">Автоматизация (Python + Selenium)</h2>
-            <div class="month-progress" id="month4-progress">Прогресс: 0/30 дней (0%)</div>
-            
-            <!-- День 91 -->
-            <div class="day-card">
-                <div class="day-header">
-                    <span class="day-number">День 91</span>
-                </div>
-                <h3 class="day-title">Установка Python</h3>
-                <p class="day-task">Написать `print("Hello QA!")`</p>
-                <div class="resources">
-                    <a href="https://pythonworld.ru/samouchitel-python" class="resource-link" target="_blank">Гайд</a>
-                    <a href="https://rutube.ru/video/9a0b1c2d3e4f5g6h7i8j9k0l1m2n3o4/" class="resource-link" target="_blank">Видео</a>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="day91" onchange="updateProgress()">
-                    <label for="day91" class="checkbox-label">Отметить как выполненное</label>
-                </div>
-            </div>
-            
-            <!-- День 92 -->
-            <div class="day-card">
-                <div class="day-header">
-                    <span class="day-number">День 92</span>
-                </div>
-                <h3 class="day-title">Переменные, типы данных</h3>
-                <p class="day-task">Решить 3 задачи на переменные</p>
-                <div class="resources">
-                    <a href="https://pythontutor.ru/" class="resource-link" target="_blank">Упражнения</a>
-                    <a href="https://vk.com/video-123456789_456239026" class="resource-link" target="_blank">Видео</a>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="day92" onchange="updateProgress()">
-                    <label for="day92" class="checkbox-label">Отметить как выполненное</label>
-                </div>
-            </div>
-            
-            <!-- День 93 -->
-            <div class="day-card">
-                <div class="day-header">
-                    <span class="day-number">День 93</span>
-                </div>
-                <h3 class="day-title">Условия (if-else)</h3>
-                <p class="day-task">Написать проверку пароля</p>
-                <div class="resources">
-                    <a href="https://pythonworld.ru/osnovy/instrukciya-if-elif-else-proverka-istinnosti-trex-meryj-operator.html" class="resource-link" target="_blank">Текст</a>
-                    <a href="https://rutube.ru/video/0a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5/" class="resource-link" target="_blank">Видео</a>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="day93" onchange="updateProgress()">
-                    <label for="day93" class="checkbox-label">Отметить как выполненное</label>
-                </div>
-            </div>
-            
-            <!-- День 94 -->
-            <div class="day-card">
-                <div class="day-header">
-                    <span class="day-number">День 94</span>
-                </div>
-                <h3 class="day-title">Циклы (for, while)</h3>
-                <p class="day-task">Вывести числа от 1 до 10</p>
-                <div class="resources">
-                    <a href="https://pythonworld.ru/cikly-for-i-while-operatory-break-i-continue-volshebnoe-slovo-else.html" class="resource-link" target="_blank">Гайд</a>
-                    <a href="https://vk.com/video-123456789_456239027" class="resource-link" target="_blank">Видео</a>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="day94" onchange="updateProgress()">
-                    <label for="day94" class="checkbox-label">Отметить как выполненное</label>
-                </div>
-            </div>
-            
-            <!-- День 95 -->
-            <div class="day-card">
-                <div class="day-header">
-                    <span class="day-number">День 95</span>
-                </div>
-                <h3 class="day-title">Установка Selenium</h3>
-                <p class="day-task">Настроить WebDriver</p>
-                <div class="resources">
-                    <a href="https://testengineer.ru/selenium-webdriver/" class="resource-link" target="_blank">Гайд</a>
-                    <a href="https://rutube.ru/video/1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6/" class="resource-link" target="_blank">Видео</a>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="day95" onchange="updateProgress()">
-                    <label for="day95" class="checkbox-label">Отметить как выполненное</label>
-                </div>
-            </div>
-            
-            <!-- День 96 -->
-            <div class="day-card">
-                <div class="day-header">
-                    <span class="day-number">День 96</span>
-                </div>
-                <h3 class="day-title">Первый автотест</h3>
-                <p class="day-task">Открыть сайт и проверить заголовок</p>
-                <div class="resources">
-                    <a href="https://qastart.ru/selenium-python" class="resource-link" target="_blank">Пример</a>
-                    <a href="https://vk.com/video-123456789_456239028" class="resource-link" target="_blank">Видео</a>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="day96" onchange="updateProgress()">
-                    <label for="day96" class="checkbox-label">Отметить как выполненное</label>
-                </div>
-            </div>
-            
-            <!-- День 97-120 -->
-            <div class="day-card">
-                <div class="day-header">
-                    <span class="day-number">День 97-120</span>
-                </div>
-                <h3 class="day-title">Практика автоматизации</h3>
-                <p class="day-task">Автоматизировать тесты для DemoQA</p>
-                <div class="resources">
-                    <a href="https://demoqa.com/" class="resource-link" target="_blank">DemoQA</a>
-                    <a href="https://github.com/qa-guru" class="resource-link" target="_blank">Готовые проекты</a>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="day97-120" onchange="updateProgress()">
-                    <label for="day97-120" class="checkbox-label">Отметить как выполненное</label>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Месяц 5 -->
-        <div id="month5" class="tab-content">
-            <h2 style="margin-bottom: 15px; color: var(--accent-color);">Подготовка к работе</h2>
-            <div class="month-progress" id="month5-progress">Прогресс: 0/30 дней (0%)</div>
-            
-            <!-- День 121 -->
-            <div class="day-card">
-                <div class="day-header">
-                    <span class="day-number">День 121</span>
-                </div>
-                <h3 class="day-title">Тестовый проект</h3>
-                <p class="day-task">Протестировать PetShop, оформить отчет</p>
-                <div class="resources">
-                    <a href="https://petstore.swagger.io/" class="resource-link" target="_blank">PetShop</a>
-                    <a href="https://testengineer.ru/portfolio/" class="resource-link" target="_blank">Пример отчета</a>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="day121" onchange="updateProgress()">
-                    <label for="day121" class="checkbox-label">Отметить как выполненное</label>
-                </div>
-            </div>
-            
-            <!-- День 122-140 -->
-            <div class="day-card">
-                <div class="day-header">
-                    <span class="day-number">День 122-140</span>
-                </div>
-                <h3 class="day-title">Создание портфолио</h3>
-                <p class="day-task">Оформить все выполненные работы в портфолио</p>
-                <div class="resources">
-                    <a href="https://testengineer.ru/portfolio/" class="resource-link" target="_blank">Примеры</a>
-                    <a href="https://github.com/" class="resource-link" target="_blank">GitHub для хранения</a>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="day122-140" onchange="updateProgress()">
-                    <label for="day122-140" class="checkbox-label">Отметить как выполненное</label>
-                </div>
-            </div>
-            
-            <!-- День 141-150 -->
-            <div class="day-card">
-                <div class="day-header">
-                    <span class="day-number">День 141-150</span>
-                </div>
-                <h3 class="day-title">Подготовка к собеседованию</h3>
-                <p class="day-task">Разобрать 50+ вопросов на собеседование</p>
-                <div class="resources">
-                    <a href="https://qastart.ru/qa-interview" class="resource-link" target="_blank">Вопросы</a>
-                    <a href="https://rutube.ru/video/2a3b4c5d6e7f8g9h0i1j2k3l4m5n6o7/" class="resource-link" target="_blank">Разбор</a>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="day141-150" onchange="updateProgress()">
-                    <label for="day141-150" class="checkbox-label">Отметить как выполненное</label>
-                </div>
-            </div>
-        </div>
-    </div>
+  <header>
+    <div class="logo" id="logoHome">zerixxx<span>//</span>log</div>
+    <nav id="mainNav">
+      <a class="active" data-page="home">Главная</a>
+      <a data-page="articles">Статьи</a>
+      <a data-page="video">Видео</a>
+      <a data-page="other">Прочее</a>
+      <a data-page="contacts">Контакты</a>
+    </nav>
+  </header>
 
-    <script>
-        // Инициализация данных
-        const daysData = [
-            // Месяц 1 (30 дней)
-            { id: 'day1', month: 1 }, { id: 'day2', month: 1 }, { id: 'day3', month: 1 },
-            { id: 'day4', month: 1 }, { id: 'day5', month: 1 }, { id: 'day6', month: 1 },
-            { id: 'day7', month: 1 }, { id: 'day8', month: 1 }, { id: 'day9-30', month: 1 },
-            
-            // Месяц 2 (30 дней)
-            { id: 'day31', month: 2 }, { id: 'day32', month: 2 }, { id: 'day33', month: 2 },
-            { id: 'day34', month: 2 }, { id: 'day35', month: 2 }, { id: 'day36', month: 2 },
-            { id: 'day37', month: 2 }, { id: 'day38-60', month: 2 },
-            
-            // Месяц 3 (30 дней)
-            { id: 'day61', month: 3 }, { id: 'day62', month: 3 }, { id: 'day63', month: 3 },
-            { id: 'day64', month: 3 }, { id: 'day65-90', month: 3 },
-            
-            // Месяц 4 (30 дней)
-            { id: 'day91', month: 4 }, { id: 'day92', month: 4 }, { id: 'day93', month: 4 },
-            { id: 'day94', month: 4 }, { id: 'day95', month: 4 }, { id: 'day96', month: 4 },
-            { id: 'day97-120', month: 4 },
-            
-            // Месяц 5 (30 дней)
-            { id: 'day121', month: 5 }, { id: 'day122-140', month: 5 }, { id: 'day141-150', month: 5 }
-        ];
+  <main>
+    <!-- ===== ГЛАВНАЯ ===== -->
+    <section id="page-home" class="page active">
+      <h1 style="color:var(--neon-green); font-size:1.3rem;">⌨️ последние записи</h1>
+      <div id="homePosts" class="posts-grid"><p style="color:var(--text-dim);">Загрузка статей...</p></div>
+    </section>
 
-        // Функция для переключения вкладок
-        function openTab(evt, tabName) {
-            var i, tabcontent, tablinks;
-            
-            tabcontent = document.getElementsByClassName("tab-content");
-            for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].className = tabcontent[i].className.replace(" active", "");
-            }
-            
-            tablinks = document.getElementsByClassName("tab");
-            for (i = 0; i < tablinks.length; i++) {
-                tablinks[i].className = tablinks[i].className.replace(" active", "");
-            }
-            
-            document.getElementById(tabName).className += " active";
-            evt.currentTarget.className += " active";
+    <!-- ===== СТАТЬИ (все) ===== -->
+    <section id="page-articles" class="page">
+      <h1 style="color:var(--neon-green); font-size:1.3rem;">📝 все статьи</h1>
+      <div id="allPosts" class="posts-grid"><p style="color:var(--text-dim);">Загрузка...</p></div>
+    </section>
+
+    <!-- ===== ВИДЕО ===== -->
+    <section id="page-video" class="page">
+      <h1 style="color:var(--neon-purple); font-size:1.3rem;">🎥 мои видео</h1>
+      <div class="video-grid">
+        <div class="video-item">
+          <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+          <h4>Трейлер нового проекта</h4>
+          <span class="meta">20 июля 2026</span>
+        </div>
+        <div class="video-item">
+          <iframe src="https://www.youtube.com/embed/9bZkp7q19f0" allowfullscreen></iframe>
+          <h4>Велосипедный спуск с горы</h4>
+          <span class="meta">15 июля 2026</span>
+        </div>
+        <div class="video-item">
+          <video controls poster="https://via.placeholder.com/640x360/0b0b0b/00ff41?text=Video+Preview">
+            <source src="#" type="video/mp4" />
+            Ваш браузер не поддерживает видео.
+          </video>
+          <h4>Лучшие моменты стрима</h4>
+          <span class="meta">8 июля 2026</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== ПРОЧЕЕ ===== -->
+    <section id="page-other" class="page">
+      <h1 style="color:var(--neon-purple); font-size:1.3rem;">⚡ прочее</h1>
+      <div class="posts-grid">
+        <article class="post-card" style="cursor:default;">
+          <h3>Мои GPX-треки</h3>
+          <div class="meta">архив маршрутов</div>
+          <p>Скачивайте треки для велосипедных прогулок в формате .gpx.</p>
+        </article>
+        <article class="post-card" style="cursor:default;">
+          <h3>Музыка для кодинга</h3>
+          <div class="meta">плейлист</div>
+          <p>Сборка треков, под которые я пишу код и вёрстку.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===== КОНТАКТЫ ===== -->
+    <section id="page-contacts" class="page">
+      <h1 style="color:var(--neon-green); font-size:1.3rem;">📡 контакты</h1>
+      <p style="margin-bottom:0.5rem;">Связь со мной через любой из каналов:</p>
+      <div class="contacts">
+        <a href="#" class="contact-btn"><i class="fab fa-discord"></i> Discord</a>
+        <a href="#" class="contact-btn"><i class="fab fa-steam"></i> Steam</a>
+        <a href="#" class="contact-btn"><i class="fab fa-telegram"></i> Telegram</a>
+        <a href="#" class="contact-btn"><i class="fab fa-github"></i> GitHub</a>
+        <a href="#" class="contact-btn"><i class="fab fa-youtube"></i> YouTube</a>
+      </div>
+      <p style="color:var(--text-dim); margin-top:1rem;">
+        <i class="fas fa-envelope"></i> zerixxx@example.com (замените)
+      </p>
+    </section>
+
+    <!-- ===== ДЕТАЛЬНАЯ СТАТЬЯ ===== -->
+    <section id="post-detail" class="page">
+      <!-- заполняется динамически -->
+    </section>
+
+    <!-- ===== СТРАНИЦА ЛОГИНА ===== -->
+    <section id="page-login" class="page">
+      <div class="login-box">
+        <h2>🔐 Вход для админа</h2>
+        <form id="loginForm">
+          <input type="email" id="loginEmail" placeholder="Email" required autofocus />
+          <input type="password" id="loginPassword" placeholder="Пароль" required />
+          <button type="submit">Войти</button>
+          <div id="loginError" class="error"></div>
+        </form>
+        <p class="info">Используйте email и пароль, созданные в Firebase Authentication.</p>
+      </div>
+    </section>
+
+    <!-- ===== АДМИНКА ===== -->
+    <section id="page-admin" class="page">
+      <h1 style="color:var(--neon-purple); font-size:1.3rem;">🔧 Админ-панель</h1>
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+        <p style="color:var(--text-dim);">Управление статьями в Firestore.</p>
+        <button id="logoutBtn" style="background:transparent; border:1px solid var(--border); color:var(--text); padding:0.4rem 1rem; border-radius:4px; cursor:pointer; font-family:var(--font-mono);">
+          <i class="fas fa-sign-out-alt"></i> Выйти
+        </button>
+      </div>
+      
+      <div class="admin-tools">
+        <button id="newPostBtn"><i class="fas fa-plus"></i> Новая статья</button>
+        <button id="refreshBtn"><i class="fas fa-sync"></i> Обновить</button>
+        <!-- Убрал экспорт/импорт, т.к. данные уже в облаке -->
+      </div>
+
+      <div id="adminList" class="admin-list"><p style="color:var(--text-dim);">Загрузка списка...</p></div>
+
+      <!-- Форма добавления/редактирования -->
+      <div id="adminForm" class="admin-form hidden">
+        <h2 id="formTitle" style="color:var(--neon-green);">Новая статья</h2>
+        <div class="row">
+          <div>
+            <label>Заголовок *</label>
+            <input type="text" id="editTitle" placeholder="Заголовок статьи" />
+          </div>
+          <div>
+            <label>Дата *</label>
+            <input type="text" id="editDate" placeholder="дд месяц гггг" />
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label>Иконка (эмодзи)</label>
+            <input type="text" id="editIcon" placeholder="🚴" maxlength="2" />
+          </div>
+          <div>
+            <label>Теги (через запятую)</label>
+            <input type="text" id="editTags" placeholder="вело, маршрут" />
+          </div>
+        </div>
+        <label>Краткое описание (превью) *</label>
+        <textarea id="editPreview" rows="2" placeholder="Краткий анонс"></textarea>
+        <label>Полный текст (Markdown / HTML) *</label>
+        <textarea id="editContent" rows="8" placeholder="Содержание статьи"></textarea>
+        <div style="margin-top:0.5rem;">
+          <button id="savePostBtn"><i class="fas fa-save"></i> Сохранить</button>
+          <button id="cancelEditBtn" class="cancel-btn">Отмена</button>
+        </div>
+        <p style="color:var(--text-dim); font-size:0.8rem; margin-top:0.5rem;">
+          * — обязательные поля. В полном тексте можно использовать Markdown (заголовки, списки, ссылки, изображения, код).
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span class="term">[zerixxx@arch ~]$</span> uptime 42d 7h &nbsp;·&nbsp; 
+    <span class="term">whoami</span> zerixxx <span class="cursor"></span>
+    <br />
+    <span style="font-size:0.7rem;">сделано вручную · 2026</span>
+  </footer>
+
+  <script>
+    // ============================================================
+    // ИНИЦИАЛИЗАЦИЯ FIREBASE (ваш конфиг)
+    // ============================================================
+    const firebaseConfig = {
+      apiKey: "AIzaSyA-s8N2SnDpB4iArm5yRUJfe9ym1p_Obm8",
+      authDomain: "zerixxx-diary.firebaseapp.com",
+      projectId: "zerixxx-diary",
+      storageBucket: "zerixxx-diary.firebasestorage.app",
+      messagingSenderId: "604711229526",
+      appId: "1:604711229526:web:73025951df7112b91103f7"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+
+    // ============================================================
+    // ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
+    // ============================================================
+    let currentUser = null;         // объект пользователя Firebase
+    let isAdmin = false;           // флаг, что пользователь админ
+    let editingId = null;          // ID редактируемой статьи (для Firestore)
+    let easyMDE = null;            // экземпляр редактора
+
+    // ============================================================
+    // ЗАГРУЗКА СТАТЕЙ ИЗ FIRESTORE
+    // ============================================================
+    async function loadPostsFromFirestore() {
+      try {
+        const snapshot = await db.collection('articles').orderBy('date', 'desc').get();
+        const articles = [];
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          articles.push({
+            id: doc.id,
+            title: data.title || 'Без названия',
+            date: data.date || '',
+            icon: data.icon || '📄',
+            tags: data.tags || [],
+            preview: data.preview || '',
+            content: data.content || ''
+          });
+        });
+        return articles;
+      } catch (error) {
+        console.error('Ошибка загрузки статей:', error);
+        alert('Не удалось загрузить статьи. Проверьте подключение к Firestore.');
+        return [];
+      }
+    }
+
+    // ============================================================
+    // РЕНДЕРИНГ КАРТОЧЕК
+    // ============================================================
+    function renderPosts(containerId, articles) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      if (!articles || articles.length === 0) {
+        container.innerHTML = `<p style="color:var(--text-dim);">Пока нет статей. Напишите первую!</p>`;
+        return;
+      }
+      container.innerHTML = articles.map(post => `
+        <div class="post-card" data-post-id="${post.id}">
+          <h3>${post.icon} ${post.title}</h3>
+          <div class="meta">${post.date} · ${(post.tags || []).join(', ')}</div>
+          <p>${post.preview}</p>
+        </div>
+      `).join('');
+    }
+
+    async function refreshAll() {
+      const articles = await loadPostsFromFirestore();
+      // Главная – последние 3
+      renderPosts('homePosts', articles.slice(0, 3));
+      renderPosts('allPosts', articles);
+      // Если мы в админке – обновим список
+      if (document.getElementById('page-admin').classList.contains('active')) {
+        renderAdminList(articles);
+      }
+    }
+
+    // ============================================================
+    // ДЕТАЛЬНАЯ СТАТЬЯ
+    // ============================================================
+    async function showPostDetail(postId) {
+      // Загружаем статью по ID из Firestore
+      try {
+        const doc = await db.collection('articles').doc(postId).get();
+        if (!doc.exists) {
+          alert('Статья не найдена.');
+          return;
         }
-        
-        // Функция для обновления прогресса
-        function updateProgress() {
-            // Общий прогресс
-            const totalDays = 150;
-            let completedDays = 0;
-            
-            // Прогресс по месяцам
-            const monthProgress = [0, 0, 0, 0, 0];
-            const monthTotals = [30, 30, 30, 30, 30];
-            
-            // Проверяем все чекбоксы
-            daysData.forEach(day => {
-                const checkbox = document.getElementById(day.id);
-                if (checkbox && checkbox.checked) {
-                    completedDays++;
-                    monthProgress[day.month - 1]++;
-                }
-            });
-            
-            // Обновляем общий прогресс
-            const overallProgress = Math.round((completedDays / totalDays) * 100);
-            document.getElementById('overall-progress').style.width = overallProgress + '%';
-            document.getElementById('progress-text').textContent = overallProgress + '% завершено (' + completedDays + '/150 дней)';
-            
-            // Обновляем прогресс по месяцам
-            for (let i = 1; i <= 5; i++) {
-                const monthCompleted = monthProgress[i - 1];
-                const monthTotal = monthTotals[i - 1];
-                const monthPercent = Math.round((monthCompleted / monthTotal) * 100);
-                document.getElementById(`month${i}-progress`).textContent = 
-                    `Прогресс: ${monthCompleted}/${monthTotal} дней (${monthPercent}%)`;
-            }
-            
-            // Сохраняем прогресс в localStorage
-            saveProgress();
-        }
-        
-        // Сохранение прогресса в localStorage
-        function saveProgress() {
-            const progressData = {};
-            daysData.forEach(day => {
-                const checkbox = document.getElementById(day.id);
-                if (checkbox) {
-                    progressData[day.id] = checkbox.checked;
-                }
-            });
-            localStorage.setItem('qaProgress', JSON.stringify(progressData));
-        }
-        
-        // Загрузка прогресса из localStorage
-        function loadProgress() {
-            const savedProgress = localStorage.getItem('qaProgress');
-            if (savedProgress) {
-                const progressData = JSON.parse(savedProgress);
-                Object.keys(progressData).forEach(id => {
-                    const checkbox = document.getElementById(id);
-                    if (checkbox) {
-                        checkbox.checked = progressData[id];
-                    }
-                });
-                updateProgress();
-            }
-        }
-        
-        // Инициализация при загрузке страницы
-        window.onload = function() {
-            loadProgress();
-            
-            // Проверяем, есть ли hash в URL для открытия нужной вкладки
-            if (window.location.hash) {
-                const tabName = window.location.hash.substring(1);
-                const tab = document.querySelector(`.tab[onclick*="${tabName}"]`);
-                if (tab) {
-                    tab.click();
-                }
-            }
+        const data = doc.data();
+        const post = {
+          id: doc.id,
+          title: data.title || 'Без названия',
+          date: data.date || '',
+          icon: data.icon || '📄',
+          tags: data.tags || [],
+          content: data.content || ''
         };
-    </script>
+
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        const detailPage = document.getElementById('post-detail');
+        detailPage.classList.add('active');
+
+        detailPage.innerHTML = `
+          <div class="back-link" id="backFromPost"><i class="fas fa-arrow-left"></i> Назад</div>
+          <h1>${post.icon} ${post.title}</h1>
+          <div class="post-meta">${post.date} · ${(post.tags || []).join(' • ')}</div>
+          <div class="post-content">${post.content}</div>
+        `;
+
+        document.getElementById('backFromPost').addEventListener('click', () => {
+          history.back();
+        });
+
+        if (history.pushState) {
+          history.pushState({ postId: postId }, '', '#post/' + postId);
+        }
+        document.querySelectorAll('#mainNav a').forEach(link => link.classList.remove('active'));
+      } catch (error) {
+        console.error('Ошибка загрузки статьи:', error);
+        alert('Не удалось загрузить статью.');
+      }
+    }
+
+    // ============================================================
+    // АДМИНКА – РЕНДЕРИНГ СПИСКА
+    // ============================================================
+    function renderAdminList(articles) {
+      const list = document.getElementById('adminList');
+      if (!articles) {
+        list.innerHTML = '<p style="color:var(--text-dim);">Загрузка...</p>';
+        return;
+      }
+      if (articles.length === 0) {
+        list.innerHTML = '<p style="color:var(--text-dim);">Нет статей. Создайте первую!</p>';
+        return;
+      }
+      list.innerHTML = articles.map(post => `
+        <div class="admin-item" data-id="${post.id}">
+          <span><span class="title">${post.icon} ${post.title}</span> <span style="color:var(--text-dim); font-size:0.8rem;">${post.date}</span></span>
+          <div class="actions">
+            <button onclick="editPost('${post.id}')" title="Редактировать"><i class="fas fa-edit"></i></button>
+            <button onclick="deletePost('${post.id}')" class="del" title="Удалить"><i class="fas fa-trash"></i></button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ============================================================
+    // ОПЕРАЦИИ CRUD (Firestore)
+    // ============================================================
+    async function deletePost(id) {
+      if (!confirm('Удалить статью навсегда?')) return;
+      try {
+        await db.collection('articles').doc(id).delete();
+        alert('Статья удалена.');
+        refreshAll(); // обновим всё
+      } catch (error) {
+        console.error('Ошибка удаления:', error);
+        alert('Не удалось удалить статью.');
+      }
+    }
+
+    async function editPost(id) {
+      try {
+        const doc = await db.collection('articles').doc(id).get();
+        if (!doc.exists) {
+          alert('Статья не найдена.');
+          return;
+        }
+        const data = doc.data();
+        editingId = id;
+        document.getElementById('formTitle').textContent = 'Редактирование статьи';
+        document.getElementById('editTitle').value = data.title || '';
+        document.getElementById('editDate').value = data.date || '';
+        document.getElementById('editIcon').value = data.icon || '';
+        document.getElementById('editTags').value = (data.tags || []).join(', ');
+        document.getElementById('editPreview').value = data.preview || '';
+        if (easyMDE) easyMDE.value(data.content || '');
+        document.getElementById('adminForm').classList.remove('hidden');
+        document.getElementById('adminForm').scrollIntoView({ behavior: 'smooth' });
+      } catch (error) {
+        console.error('Ошибка загрузки для редактирования:', error);
+        alert('Не удалось загрузить статью для редактирования.');
+      }
+    }
+
+    async function savePostFromForm() {
+      const title = document.getElementById('editTitle').value.trim();
+      const date = document.getElementById('editDate').value.trim();
+      const icon = document.getElementById('editIcon').value.trim();
+      const tagsRaw = document.getElementById('editTags').value.trim();
+      const preview = document.getElementById('editPreview').value.trim();
+      const content = easyMDE ? easyMDE.value().trim() : '';
+
+      if (!title || !date || !preview || !content) {
+        alert('Заполните все обязательные поля: Заголовок, Дата, Превью, Содержание.');
+        return;
+      }
+
+      const tags = tagsRaw ? tagsRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
+
+      const postData = {
+        title,
+        date,
+        icon: icon || '📄',
+        tags,
+        preview,
+        content,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+
+      try {
+        if (editingId) {
+          // Обновление
+          await db.collection('articles').doc(editingId).update(postData);
+          alert('Статья обновлена!');
+        } else {
+          // Добавление
+          await db.collection('articles').add(postData);
+          alert('Статья добавлена!');
+        }
+        editingId = null;
+        resetForm();
+        refreshAll();
+      } catch (error) {
+        console.error('Ошибка сохранения:', error);
+        alert('Не удалось сохранить статью. Проверьте права доступа.');
+      }
+    }
+
+    function resetForm() {
+      editingId = null;
+      document.getElementById('formTitle').textContent = 'Новая статья';
+      document.getElementById('editTitle').value = '';
+      document.getElementById('editDate').value = '';
+      document.getElementById('editIcon').value = '';
+      document.getElementById('editTags').value = '';
+      document.getElementById('editPreview').value = '';
+      if (easyMDE) easyMDE.value('');
+      document.getElementById('adminForm').classList.add('hidden');
+    }
+
+    // ============================================================
+    // АВТОРИЗАЦИЯ И ПРОВЕРКА АДМИНА
+    // ============================================================
+    async function checkAdmin(email) {
+      try {
+        const snapshot = await db.collection('admin').where('email', '==', email).get();
+        return !snapshot.empty;
+      } catch (error) {
+        console.error('Ошибка проверки админа:', error);
+        return false;
+      }
+    }
+
+    // Обработчик формы логина
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value.trim();
+      const errorEl = document.getElementById('loginError');
+      errorEl.textContent = '';
+
+      try {
+        const cred = await auth.signInWithEmailAndPassword(email, password);
+        // После успешного входа сработает onAuthStateChanged
+      } catch (error) {
+        console.error('Ошибка входа:', error);
+        errorEl.textContent = 'Неверный email или пароль.';
+        document.getElementById('loginPassword').value = '';
+        document.getElementById('loginPassword').focus();
+      }
+    });
+
+    // Наблюдатель за состоянием аутентификации
+    auth.onAuthStateChanged(async function(user) {
+      if (user) {
+        currentUser = user;
+        // Проверяем, является ли пользователь админом
+        isAdmin = await checkAdmin(user.email);
+        if (isAdmin) {
+          // Показываем админку
+          switchPage('admin');
+          // Инициализируем редактор, если ещё нет
+          if (!easyMDE) {
+            const textarea = document.getElementById('editContent');
+            easyMDE = new EasyMDE({ element: textarea, spellChecker: false, toolbar: ['bold', 'italic', 'heading', 'quote', 'unordered-list', 'ordered-list', 'link', 'image', 'code', 'preview', 'side-by-side', 'fullscreen'] });
+          }
+          refreshAll();
+          resetForm();
+          alert('Добро пожаловать в админ-панель, zerixxx!');
+        } else {
+          // Пользователь залогинен, но не админ – показываем главную и уведомляем
+          alert('У вас нет прав администратора.');
+          await auth.signOut(); // разлогиниваем, чтобы он не мешал
+          switchPage('home');
+        }
+      } else {
+        // Пользователь вышел
+        currentUser = null;
+        isAdmin = false;
+        // Если мы были в админке или логине – уходим на главную
+        const activePage = document.querySelector('.page.active');
+        if (activePage && (activePage.id === 'page-admin' || activePage.id === 'page-login')) {
+          switchPage('home');
+        }
+        // Сброс формы в админке (если она была открыта)
+        resetForm();
+        // Обновляем список (на случай, если статьи изменились)
+        refreshAll();
+      }
+    });
+
+    // Выход из аккаунта
+    document.getElementById('logoutBtn').addEventListener('click', async function() {
+      try {
+        await auth.signOut();
+        alert('Вы вышли из аккаунта.');
+        switchPage('home');
+      } catch (error) {
+        console.error('Ошибка выхода:', error);
+      }
+    });
+
+    // ============================================================
+    // СЕКРЕТНЫЙ ТРИГГЕР: 5 КЛИКОВ ПО ЛОГОТИПУ -> СТРАНИЦА ЛОГИНА
+    // ============================================================
+    let clickCount = 0;
+    let clickTimer = null;
+
+    document.getElementById('logoHome').addEventListener('click', function(e) {
+      clickCount++;
+      if (clickTimer) clearTimeout(clickTimer);
+      clickTimer = setTimeout(() => {
+        clickCount = 0;
+      }, 1500);
+
+      if (clickCount >= 5) {
+        clickCount = 0;
+        clearTimeout(clickTimer);
+        // Если пользователь уже админ – открываем админку, иначе страницу логина
+        if (isAdmin && currentUser) {
+          switchPage('admin');
+        } else {
+          switchPage('login');
+          document.getElementById('loginEmail').value = '';
+          document.getElementById('loginPassword').value = '';
+          document.getElementById('loginError').textContent = '';
+          document.getElementById('loginEmail').focus();
+        }
+      }
+    });
+
+    // ============================================================
+    // НАВИГАЦИЯ И ПЕРЕКЛЮЧЕНИЕ СТРАНИЦ
+    // ============================================================
+    function switchPage(pageId) {
+      // Защита: нельзя перейти в админку или логин напрямую через хэш
+      const currentHash = window.location.hash;
+      if ((pageId === 'admin' || pageId === 'login') && (currentHash === '#admin' || currentHash === '#login')) {
+        pageId = 'home'; // перенаправляем на главную, если кто-то пытается подобрать URL
+      }
+
+      // Если пытаемся открыть админку, но не админ – идём на логин
+      if (pageId === 'admin' && !isAdmin) {
+        pageId = 'login';
+      }
+
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      const target = document.getElementById('page-' + pageId);
+      if (target) target.classList.add('active');
+
+      document.querySelectorAll('#mainNav a').forEach(link => {
+        link.classList.toggle('active', link.dataset.page === pageId);
+      });
+
+      // Обновляем хэш, но для логина и админки не сохраняем
+      if (pageId !== 'login' && pageId !== 'admin' && history.pushState) {
+        history.pushState({ page: pageId }, '', '#' + pageId);
+      } else if (pageId === 'login' || pageId === 'admin') {
+        if (history.replaceState) {
+          history.replaceState({ page: 'home' }, '', '#home');
+        }
+      }
+
+      // Если перешли на админку – обновить список
+      if (pageId === 'admin') {
+        refreshAll();
+      }
+    }
+
+    // ============================================================
+    // ОБРАБОТКА HASH (для статей)
+    // ============================================================
+    function handleHash() {
+      const hash = window.location.hash;
+      if (hash.startsWith('#post/')) {
+        const id = hash.split('/')[1];
+        if (id) showPostDetail(id);
+        else switchPage('home');
+      } else if (hash.startsWith('#') && hash.length > 1) {
+        const page = hash.replace('#', '');
+        if (['home', 'articles', 'video', 'other', 'contacts'].includes(page)) {
+          switchPage(page);
+        } else {
+          switchPage('home');
+        }
+      } else {
+        switchPage('home');
+      }
+    }
+
+    // ============================================================
+    // ИНИЦИАЛИЗАЦИЯ ПРИ ЗАГРУЗКЕ
+    // ============================================================
+    document.addEventListener('DOMContentLoaded', function() {
+      // Первоначальная загрузка статей
+      refreshAll();
+
+      // Клик по карточке
+      document.addEventListener('click', function(e) {
+        const card = e.target.closest('.post-card');
+        if (card && card.dataset.postId) {
+          const id = card.dataset.postId;
+          showPostDetail(id);
+        }
+      });
+
+      // Навигация
+      document.querySelectorAll('#mainNav a').forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const page = this.dataset.page;
+          if (page) switchPage(page);
+        });
+      });
+
+      // Кнопки админки
+      document.getElementById('newPostBtn').addEventListener('click', function() {
+        resetForm();
+        document.getElementById('adminForm').classList.remove('hidden');
+        document.getElementById('adminForm').scrollIntoView({ behavior: 'smooth' });
+      });
+
+      document.getElementById('refreshBtn').addEventListener('click', function() {
+        refreshAll();
+      });
+
+      document.getElementById('savePostBtn').addEventListener('click', savePostFromForm);
+      document.getElementById('cancelEditBtn').addEventListener('click', resetForm);
+
+      // Обработка хэша при загрузке и при изменении истории
+      window.addEventListener('popstate', handleHash);
+      handleHash();
+
+      // Если пользователь уже залогинен (например, сессия не истекла) – onAuthStateChanged сработает автоматически
+    });
+  </script>
 </body>
 </html>
