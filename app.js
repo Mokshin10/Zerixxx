@@ -204,10 +204,17 @@ window.editItem = async function(id) {
   }
 };
 
+// ============================================================
+// ФУНКЦИЯ СОХРАНЕНИЯ (ИСПРАВЛЕНА)
+// ============================================================
 async function saveItem() {
-  // Принудительно сохраняем EasyMDE в textarea
+  // Принудительно синхронизируем EasyMDE с textarea
   if (easyMDE) {
-    easyMDE.codemirror.save();
+    try {
+      easyMDE.codemirror.save();
+    } catch (e) {
+      console.warn('Ошибка синхронизации EasyMDE:', e);
+    }
   }
 
   const title = document.getElementById('editTitle')?.value?.trim() || '';
@@ -223,18 +230,24 @@ async function saveItem() {
 
   if (currentSection === 'articles') {
     const preview = document.getElementById('editPreview')?.value?.trim() || '';
-    let content = '';
-    if (easyMDE) {
-      content = easyMDE.value().trim();
-    } else {
-      content = document.getElementById('editContent')?.value?.trim() || '';
+
+    // Читаем содержимое из textarea (уже синхронизировано через codemirror.save)
+    let content = document.getElementById('editContent')?.value?.trim() || '';
+
+    // Если textarea пуста, пробуем получить из EasyMDE напрямую (запасной вариант)
+    if (easyMDE && !content) {
+      content = easyMDE.value().trim() || '';
     }
+    // Ещё один запасной вариант — codemirror.getValue()
+    if (easyMDE && !content) {
+      content = easyMDE.codemirror.getValue().trim() || '';
+    }
+
     const tagsRaw = document.getElementById('editTags')?.value?.trim() || '';
 
-    // Проверка и отладка
+    // Отладка в консоли (поможет понять, что передаётся)
     console.log('Preview:', preview);
-    console.log('Content from MDE:', content);
-    console.log('EasyMDE exists:', !!easyMDE);
+    console.log('Content (from textarea):', content);
 
     if (!preview || !content) {
       alert(`Превью и полный текст обязательны для статей.\nПревью: "${preview}"\nТекст: "${content}"`);
@@ -257,7 +270,10 @@ async function saveItem() {
     const preview = document.getElementById('editPreview')?.value?.trim() || '';
     let content = '';
     if (easyMDE) {
-      content = easyMDE.value().trim();
+      easyMDE.codemirror.save();
+      content = document.getElementById('editContent')?.value?.trim() || '';
+      if (!content) content = easyMDE.value().trim() || '';
+      if (!content) content = easyMDE.codemirror.getValue().trim() || '';
     } else {
       content = document.getElementById('editContent')?.value?.trim() || '';
     }
@@ -289,7 +305,7 @@ async function saveItem() {
 }
 
 // ============================================================
-// ФОРМА – ДИНАМИЧЕСКОЕ ПОСТРОЕНИЕ
+// ФОРМА – ДИНАМИЧЕСКОЕ ПОСТРОЕНИЕ (ИСПРАВЛЕНА)
 // ============================================================
 function showForm(data = null) {
   const formContainer = document.getElementById('formFields');
@@ -354,26 +370,36 @@ function showForm(data = null) {
   document.getElementById('adminForm').classList.remove('hidden');
   document.getElementById('adminForm').scrollIntoView({ behavior: 'smooth' });
 
-  // Инициализация EasyMDE
+  // Инициализация EasyMDE с увеличенной задержкой и проверками
   setTimeout(() => {
     const contentTextarea = document.getElementById('editContent');
-    if (contentTextarea && contentTextarea.tagName === 'TEXTAREA') {
+    // Проверяем, существует ли textarea и не является ли она скрытой (для видео)
+    if (contentTextarea && contentTextarea.tagName === 'TEXTAREA' && contentTextarea.type !== 'hidden') {
+      // Уничтожаем предыдущий экземпляр, если есть
       if (easyMDE) {
-        easyMDE.toTextArea();
+        try {
+          easyMDE.toTextArea();
+        } catch (e) {}
         easyMDE = null;
       }
-      easyMDE = new EasyMDE({
-        element: contentTextarea,
-        spellChecker: false,
-        toolbar: ['bold', 'italic', 'heading', 'quote', 'unordered-list', 'ordered-list', 'link', 'image', 'code', 'preview', 'side-by-side', 'fullscreen']
-      });
-      if (data?.content) {
-        easyMDE.value(data.content);
+      try {
+        easyMDE = new EasyMDE({
+          element: contentTextarea,
+          spellChecker: false,
+          toolbar: ['bold', 'italic', 'heading', 'quote', 'unordered-list', 'ordered-list', 'link', 'image', 'code', 'preview', 'side-by-side', 'fullscreen']
+        });
+        if (data?.content) {
+          easyMDE.value(data.content);
+        }
+        // Сразу синхронизируем
+        easyMDE.codemirror.save();
+      } catch (error) {
+        console.error('Ошибка инициализации EasyMDE:', error);
+        // Если не удалось создать EasyMDE, оставляем обычный textarea
+        easyMDE = null;
       }
-      // Сразу сохраняем в textarea
-      easyMDE.codemirror.save();
     }
-  }, 300);
+  }, 500); // увеличенная задержка для полной загрузки DOM
 }
 
 function resetForm() {
@@ -384,8 +410,14 @@ function resetForm() {
     if (el) el.value = '';
   });
   if (easyMDE) {
-    easyMDE.value('');
+    try {
+      easyMDE.value('');
+      easyMDE.codemirror.save();
+    } catch (e) {}
   }
+  // Также очищаем textarea
+  const contentEl = document.getElementById('editContent');
+  if (contentEl) contentEl.value = '';
 }
 
 // ============================================================
