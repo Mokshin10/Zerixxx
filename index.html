@@ -687,7 +687,7 @@
     // ============================================================
     let currentUser = null;
     let isAdmin = false;
-    let currentSection = 'articles'; // 'articles' | 'videos' | 'other'
+    let currentSection = 'articles';
     let editingId = null;
     let easyMDE = null;
 
@@ -699,8 +699,7 @@
         const snapshot = await db.collection(collectionName).orderBy('date', 'desc').get();
         const items = [];
         snapshot.forEach(doc => {
-          const data = doc.data();
-          items.push({ id: doc.id, ...data });
+          items.push({ id: doc.id, ...doc.data() });
         });
         return items;
       } catch (error) {
@@ -710,7 +709,7 @@
     }
 
     // ============================================================
-    // РЕНДЕРИНГ КАРТОЧЕК (для главной и страниц)
+    // РЕНДЕРИНГ КАРТОЧЕК
     // ============================================================
     function renderArticles(containerId, articles, clickable = true) {
       const container = document.getElementById(containerId);
@@ -782,7 +781,7 @@
     }
 
     // ============================================================
-    // ДЕТАЛЬНЫЙ ПРОСМОТР (для статей и прочего)
+    // ДЕТАЛЬНЫЙ ПРОСМОТР
     // ============================================================
     async function showDetail(collection, id) {
       try {
@@ -812,13 +811,12 @@
     }
 
     // ============================================================
-    // ОБНОВЛЕНИЕ ВСЕХ РАЗДЕЛОВ НА ФРОНТЕНДЕ
+    // ОБНОВЛЕНИЕ ВСЕХ РАЗДЕЛОВ
     // ============================================================
     async function refreshFrontend() {
       const articles = await loadCollection('articles');
       const videos = await loadCollection('videos');
       const other = await loadCollection('other');
-
       renderArticles('homePosts', articles.slice(0, 3), true);
       renderArticles('allPosts', articles, true);
       renderVideos('videoList', videos);
@@ -866,9 +864,8 @@
       try {
         const doc = await db.collection(currentSection).doc(id).get();
         if (!doc.exists) { alert('Запись не найдена.'); return; }
-        const data = doc.data();
         editingId = id;
-        showForm(data);
+        showForm(doc.data());
       } catch (error) {
         console.error('Ошибка загрузки для редактирования:', error);
         alert('Не удалось загрузить запись.');
@@ -876,8 +873,66 @@
     };
 
     async function saveItem() {
-      const data = collectFormData();
-      if (!data) return;
+      // Принудительно сохраняем EasyMDE в textarea
+      if (easyMDE) {
+        easyMDE.codemirror.save();
+      }
+
+      const title = document.getElementById('editTitle')?.value.trim();
+      const date = document.getElementById('editDate')?.value.trim();
+      const icon = document.getElementById('editIcon')?.value.trim();
+
+      if (!title || !date) {
+        alert('Заголовок и Дата обязательны.');
+        return;
+      }
+
+      let data = { title, date, icon: icon || '📄' };
+
+      if (currentSection === 'articles') {
+        const preview = document.getElementById('editPreview')?.value.trim();
+        // Если есть EasyMDE – берём из него, иначе из textarea
+        let content = '';
+        if (easyMDE) {
+          content = easyMDE.value().trim();
+        } else {
+          content = document.getElementById('editContent')?.value.trim() || '';
+        }
+        const tagsRaw = document.getElementById('editTags')?.value.trim() || '';
+        if (!preview || !content) {
+          alert('Превью и полный текст обязательны для статей.');
+          return;
+        }
+        data.preview = preview;
+        data.content = content;
+        data.tags = tagsRaw ? tagsRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
+      } else if (currentSection === 'videos') {
+        const url = document.getElementById('editUrl')?.value.trim();
+        if (!url) {
+          alert('Ссылка на видео обязательна.');
+          return;
+        }
+        data.url = url;
+        data.preview = '';
+        data.content = '';
+        data.tags = [];
+      } else if (currentSection === 'other') {
+        const preview = document.getElementById('editPreview')?.value.trim();
+        let content = '';
+        if (easyMDE) {
+          content = easyMDE.value().trim();
+        } else {
+          content = document.getElementById('editContent')?.value.trim() || '';
+        }
+        if (!preview) {
+          alert('Краткое описание обязательно.');
+          return;
+        }
+        data.preview = preview;
+        data.content = content || '';
+        data.tags = [];
+      }
+
       try {
         if (editingId) {
           await db.collection(currentSection).doc(editingId).update(data);
@@ -946,7 +1001,7 @@
         <div class="video-url-hint">Вставьте ссылку на страницу видео (не embed-код).</div>
         `;
         hint.textContent = 'Поле "Ссылка" обязательно. Видео будет встроено на сайт.';
-        // Скрытые поля для совместимости с collectFormData
+        // Скрытые поля для совместимости
         html += `<input type="hidden" id="editPreview" value="" /><input type="hidden" id="editContent" value="" />`;
       } else if (currentSection === 'other') {
         html += `
@@ -963,74 +1018,30 @@
       document.getElementById('adminForm').classList.remove('hidden');
       document.getElementById('adminForm').scrollIntoView({ behavior: 'smooth' });
 
-      // Инициализация EasyMDE для текстовых полей с content
+      // Инициализация EasyMDE
       setTimeout(() => {
         const contentTextarea = document.getElementById('editContent');
         if (contentTextarea && contentTextarea.tagName === 'TEXTAREA') {
-          if (!easyMDE) {
-            easyMDE = new EasyMDE({
-              element: contentTextarea,
-              spellChecker: false,
-              toolbar: ['bold', 'italic', 'heading', 'quote', 'unordered-list', 'ordered-list', 'link', 'image', 'code', 'preview', 'side-by-side', 'fullscreen']
-            });
-          } else {
-            easyMDE.value(data?.content || '');
+          if (easyMDE) {
+            easyMDE.toTextArea();
+            easyMDE = null;
+          }
+          easyMDE = new EasyMDE({
+            element: contentTextarea,
+            spellChecker: false,
+            toolbar: ['bold', 'italic', 'heading', 'quote', 'unordered-list', 'ordered-list', 'link', 'image', 'code', 'preview', 'side-by-side', 'fullscreen']
+          });
+          if (data?.content) {
+            easyMDE.value(data.content);
           }
         }
-      }, 100);
-    }
-
-    function collectFormData() {
-      const title = document.getElementById('editTitle').value.trim();
-      const date = document.getElementById('editDate').value.trim();
-      const icon = document.getElementById('editIcon').value.trim();
-      if (!title || !date) {
-        alert('Заголовок и Дата обязательны.');
-        return null;
-      }
-
-      let data = { title, date, icon: icon || '📄' };
-
-      if (currentSection === 'articles') {
-        const preview = document.getElementById('editPreview').value.trim();
-        const content = easyMDE ? easyMDE.value().trim() : document.getElementById('editContent').value.trim();
-        const tagsRaw = document.getElementById('editTags').value.trim();
-        if (!preview || !content) {
-          alert('Превью и полный текст обязательны для статей.');
-          return null;
-        }
-        data.preview = preview;
-        data.content = content;
-        data.tags = tagsRaw ? tagsRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
-      } else if (currentSection === 'videos') {
-        const url = document.getElementById('editUrl').value.trim();
-        if (!url) {
-          alert('Ссылка на видео обязательна.');
-          return null;
-        }
-        data.url = url;
-        data.preview = '';
-        data.content = '';
-        data.tags = [];
-      } else if (currentSection === 'other') {
-        const preview = document.getElementById('editPreview').value.trim();
-        const content = easyMDE ? easyMDE.value().trim() : document.getElementById('editContent').value.trim();
-        if (!preview) {
-          alert('Краткое описание обязательно.');
-          return null;
-        }
-        data.preview = preview;
-        data.content = content || '';
-        data.tags = [];
-      }
-      return data;
+      }, 200);
     }
 
     function resetForm() {
       editingId = null;
       document.getElementById('adminForm').classList.add('hidden');
-      const fields = ['editTitle', 'editDate', 'editIcon', 'editTags', 'editPreview', 'editUrl'];
-      fields.forEach(id => {
+      ['editTitle', 'editDate', 'editIcon', 'editTags', 'editPreview', 'editUrl'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.value = '';
       });
@@ -1117,7 +1128,7 @@
     });
 
     // ============================================================
-    // СЕКРЕТНЫЙ ТРИГГЕР: 5 КЛИКОВ ПО ЛОГОТИПУ -> СТРАНИЦА ЛОГИНА
+    // СЕКРЕТНЫЙ ТРИГГЕР: 5 КЛИКОВ ПО ЛОГОТИПУ
     // ============================================================
     let clickCount = 0;
     let clickTimer = null;
@@ -1181,7 +1192,6 @@
     document.addEventListener('DOMContentLoaded', function() {
       refreshFrontend();
 
-      // Навигация
       document.querySelectorAll('#mainNav a').forEach(link => {
         link.addEventListener('click', function(e) {
           e.preventDefault();
@@ -1190,7 +1200,6 @@
         });
       });
 
-      // Админка – вкладки
       document.querySelectorAll('#adminTabs button').forEach(btn => {
         btn.addEventListener('click', function() {
           const section = this.dataset.section;
@@ -1198,7 +1207,6 @@
         });
       });
 
-      // Кнопки админки
       document.getElementById('newItemBtn').addEventListener('click', function() {
         resetForm();
         showForm(null);
@@ -1212,7 +1220,6 @@
       document.getElementById('saveItemBtn').addEventListener('click', saveItem);
       document.getElementById('cancelEditBtn').addEventListener('click', resetForm);
 
-      // Обработка хэша (для детального просмотра)
       function handleHash() {
         const hash = window.location.hash;
         if (hash.startsWith('#detail/')) {
@@ -1226,7 +1233,6 @@
             }
           }
         }
-        // Обычная страница
         if (hash.startsWith('#') && hash.length > 1) {
           const page = hash.replace('#', '');
           if (['home', 'articles', 'video', 'other', 'contacts'].includes(page)) {
