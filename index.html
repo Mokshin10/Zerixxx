@@ -160,11 +160,39 @@
       color: #aaa;
       font-size: 0.95rem;
     }
-    .video-card iframe {
-      aspect-ratio: 16/9;
+
+    /* ===== ВИДЕО СЕТКА ===== */
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.8rem;
+      margin: 1.8rem 0;
+    }
+    .video-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.8rem;
+      transition: 0.25s;
+    }
+    .video-item:hover {
+      border-color: var(--neon-purple);
+      box-shadow: var(--glow-purple);
+    }
+    .video-item iframe {
+      aspect-ratio: 16 / 9;
       width: 100%;
       border-radius: 4px;
       background: #000;
+    }
+    .video-item h4 {
+      color: var(--neon-purple);
+      margin: 0.6rem 0 0.2rem;
+      font-size: 1rem;
+    }
+    .video-item .meta {
+      font-size: 0.8rem;
+      color: var(--text-dim);
     }
 
     /* ===== ДЕТАЛЬНАЯ СТАТЬЯ (для статей и прочего) ===== */
@@ -218,40 +246,6 @@
     #post-detail .post-content ol {
       padding-left: 2rem;
       margin-bottom: 1rem;
-    }
-
-    /* ===== ВИДЕО СЕТКА ===== */
-    .video-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1.8rem;
-      margin: 1.8rem 0;
-    }
-    .video-item {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0.8rem;
-      transition: 0.25s;
-    }
-    .video-item:hover {
-      border-color: var(--neon-purple);
-      box-shadow: var(--glow-purple);
-    }
-    .video-item iframe {
-      aspect-ratio: 16 / 9;
-      width: 100%;
-      border-radius: 4px;
-      background: #000;
-    }
-    .video-item h4 {
-      color: var(--neon-purple);
-      margin: 0.6rem 0 0.2rem;
-      font-size: 1rem;
-    }
-    .video-item .meta {
-      font-size: 0.8rem;
-      color: var(--text-dim);
     }
 
     /* ===== КОНТАКТЫ ===== */
@@ -696,7 +690,6 @@
     let currentSection = 'articles'; // 'articles' | 'videos' | 'other'
     let editingId = null;
     let easyMDE = null;
-    let formType = 'articles'; // для определения полей формы
 
     // ============================================================
     // ЗАГРУЗКА ДАННЫХ ИЗ FIRESTORE
@@ -750,7 +743,12 @@
         return;
       }
       container.innerHTML = videos.map(item => {
-        const embedUrl = item.url ? item.url.replace('watch?v=', 'embed/') : '';
+        let embedUrl = item.url || '';
+        if (embedUrl.includes('watch?v=')) {
+          embedUrl = embedUrl.replace('watch?v=', 'embed/');
+        } else if (embedUrl.includes('youtu.be/')) {
+          embedUrl = embedUrl.replace('youtu.be/', 'youtube.com/embed/');
+        }
         return `
           <div class="video-item">
             <iframe src="${embedUrl}" allowfullscreen></iframe>
@@ -851,7 +849,7 @@
     // ============================================================
     // ОПЕРАЦИИ CRUD
     // ============================================================
-    async function deleteItem(id) {
+    window.deleteItem = async function(id) {
       if (!confirm('Удалить запись навсегда?')) return;
       try {
         await db.collection(currentSection).doc(id).delete();
@@ -862,9 +860,9 @@
         console.error('Ошибка удаления:', error);
         alert('Не удалось удалить запись.');
       }
-    }
+    };
 
-    async function editItem(id) {
+    window.editItem = async function(id) {
       try {
         const doc = await db.collection(currentSection).doc(id).get();
         if (!doc.exists) { alert('Запись не найдена.'); return; }
@@ -875,7 +873,7 @@
         console.error('Ошибка загрузки для редактирования:', error);
         alert('Не удалось загрузить запись.');
       }
-    }
+    };
 
     async function saveItem() {
       const data = collectFormData();
@@ -907,7 +905,6 @@
       const titleEl = document.getElementById('formTitle');
       titleEl.textContent = data ? 'Редактирование записи' : 'Новая запись';
 
-      // Строим поля в зависимости от раздела
       let html = `
         <div class="row">
           <div>
@@ -949,6 +946,8 @@
         <div class="video-url-hint">Вставьте ссылку на страницу видео (не embed-код).</div>
         `;
         hint.textContent = 'Поле "Ссылка" обязательно. Видео будет встроено на сайт.';
+        // Скрытые поля для совместимости с collectFormData
+        html += `<input type="hidden" id="editPreview" value="" /><input type="hidden" id="editContent" value="" />`;
       } else if (currentSection === 'other') {
         html += `
           </div>
@@ -967,14 +966,16 @@
       // Инициализация EasyMDE для текстовых полей с content
       setTimeout(() => {
         const contentTextarea = document.getElementById('editContent');
-        if (contentTextarea && !easyMDE) {
-          easyMDE = new EasyMDE({
-            element: contentTextarea,
-            spellChecker: false,
-            toolbar: ['bold', 'italic', 'heading', 'quote', 'unordered-list', 'ordered-list', 'link', 'image', 'code', 'preview', 'side-by-side', 'fullscreen']
-          });
-        } else if (contentTextarea && easyMDE) {
-          easyMDE.value(data?.content || '');
+        if (contentTextarea && contentTextarea.tagName === 'TEXTAREA') {
+          if (!easyMDE) {
+            easyMDE = new EasyMDE({
+              element: contentTextarea,
+              spellChecker: false,
+              toolbar: ['bold', 'italic', 'heading', 'quote', 'unordered-list', 'ordered-list', 'link', 'image', 'code', 'preview', 'side-by-side', 'fullscreen']
+            });
+          } else {
+            easyMDE.value(data?.content || '');
+          }
         }
       }, 100);
     }
@@ -1008,7 +1009,6 @@
           return null;
         }
         data.url = url;
-        // Для видео нет preview и content, но можно добавить пустые поля для единообразия
         data.preview = '';
         data.content = '';
         data.tags = [];
@@ -1029,16 +1029,14 @@
     function resetForm() {
       editingId = null;
       document.getElementById('adminForm').classList.add('hidden');
-      if (easyMDE) easyMDE.value('');
-      document.getElementById('editTitle').value = '';
-      document.getElementById('editDate').value = '';
-      document.getElementById('editIcon').value = '';
-      const tagsField = document.getElementById('editTags');
-      if (tagsField) tagsField.value = '';
-      const previewField = document.getElementById('editPreview');
-      if (previewField) previewField.value = '';
-      const urlField = document.getElementById('editUrl');
-      if (urlField) urlField.value = '';
+      const fields = ['editTitle', 'editDate', 'editIcon', 'editTags', 'editPreview', 'editUrl'];
+      fields.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+      if (easyMDE) {
+        easyMDE.value('');
+      }
     }
 
     // ============================================================
@@ -1088,9 +1086,6 @@
         isAdmin = await checkAdmin(user.email);
         if (isAdmin) {
           switchPage('admin');
-          if (!easyMDE) {
-            // EasyMDE будет создан при открытии формы
-          }
           renderAdminList();
           resetForm();
           alert('Добро пожаловать в админ-панель, zerixxx!');
@@ -1172,7 +1167,6 @@
         }
       }
       if (pageId === 'admin') {
-        // Если админка, то показываем список для текущего раздела
         renderAdminList();
         resetForm();
       }
