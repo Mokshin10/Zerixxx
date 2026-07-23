@@ -10,11 +10,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <!-- EasyMDE (Markdown редактор) -->
+  <!-- EasyMDE -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde@2.18.0/dist/easymde.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/easymde@2.18.0/dist/easymde.min.js"></script>
-  
-  <!-- Firebase SDK (compat, для простоты) -->
+  <!-- Firebase compat -->
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
@@ -128,7 +127,7 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* ===== КАРТОЧКИ ===== */
+    /* ===== КАРТОЧКИ (общие) ===== */
     .posts-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -161,8 +160,14 @@
       color: #aaa;
       font-size: 0.95rem;
     }
+    .video-card iframe {
+      aspect-ratio: 16/9;
+      width: 100%;
+      border-radius: 4px;
+      background: #000;
+    }
 
-    /* ===== ДЕТАЛЬНАЯ СТАТЬЯ ===== */
+    /* ===== ДЕТАЛЬНАЯ СТАТЬЯ (для статей и прочего) ===== */
     #post-detail {
       padding: 1rem 0;
     }
@@ -215,7 +220,7 @@
       margin-bottom: 1rem;
     }
 
-    /* ===== ВИДЕО ===== */
+    /* ===== ВИДЕО СЕТКА ===== */
     .video-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -243,6 +248,10 @@
       color: var(--neon-purple);
       margin: 0.6rem 0 0.2rem;
       font-size: 1rem;
+    }
+    .video-item .meta {
+      font-size: 0.8rem;
+      color: var(--text-dim);
     }
 
     /* ===== КОНТАКТЫ ===== */
@@ -335,6 +344,34 @@
     }
 
     /* ===== АДМИНКА ===== */
+    .admin-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin: 1rem 0 1.5rem;
+      flex-wrap: wrap;
+    }
+    .admin-tabs button {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.5rem 1.2rem;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 0.9rem;
+    }
+    .admin-tabs button:hover {
+      border-color: var(--neon-green);
+      color: var(--neon-green);
+    }
+    .admin-tabs button.active {
+      border-color: var(--neon-green);
+      background: #1a1a1a;
+      color: var(--neon-green);
+      box-shadow: var(--glow-green);
+    }
+
     .admin-tools {
       margin: 1.5rem 0;
       display: flex;
@@ -363,6 +400,7 @@
       color: #ff0040;
       box-shadow: 0 0 12px rgba(255, 0, 64, 0.25);
     }
+
     .admin-list {
       margin: 1rem 0;
       display: flex;
@@ -459,6 +497,11 @@
     .admin-form .cancel-btn:hover {
       background: #555;
     }
+    .admin-form .video-url-hint {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      margin-top: 0.2rem;
+    }
 
     /* ===== ФУТЕР ===== */
     footer {
@@ -536,43 +579,13 @@
     <!-- ===== ВИДЕО ===== -->
     <section id="page-video" class="page">
       <h1 style="color:var(--neon-purple); font-size:1.3rem;">🎥 мои видео</h1>
-      <div class="video-grid">
-        <div class="video-item">
-          <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
-          <h4>Трейлер нового проекта</h4>
-          <span class="meta">20 июля 2026</span>
-        </div>
-        <div class="video-item">
-          <iframe src="https://www.youtube.com/embed/9bZkp7q19f0" allowfullscreen></iframe>
-          <h4>Велосипедный спуск с горы</h4>
-          <span class="meta">15 июля 2026</span>
-        </div>
-        <div class="video-item">
-          <video controls poster="https://via.placeholder.com/640x360/0b0b0b/00ff41?text=Video+Preview">
-            <source src="#" type="video/mp4" />
-            Ваш браузер не поддерживает видео.
-          </video>
-          <h4>Лучшие моменты стрима</h4>
-          <span class="meta">8 июля 2026</span>
-        </div>
-      </div>
+      <div id="videoList" class="video-grid"><p style="color:var(--text-dim);">Загрузка видео...</p></div>
     </section>
 
     <!-- ===== ПРОЧЕЕ ===== -->
     <section id="page-other" class="page">
       <h1 style="color:var(--neon-purple); font-size:1.3rem;">⚡ прочее</h1>
-      <div class="posts-grid">
-        <article class="post-card" style="cursor:default;">
-          <h3>Мои GPX-треки</h3>
-          <div class="meta">архив маршрутов</div>
-          <p>Скачивайте треки для велосипедных прогулок в формате .gpx.</p>
-        </article>
-        <article class="post-card" style="cursor:default;">
-          <h3>Музыка для кодинга</h3>
-          <div class="meta">плейлист</div>
-          <p>Сборка треков, под которые я пишу код и вёрстку.</p>
-        </article>
-      </div>
+      <div id="otherList" class="posts-grid"><p style="color:var(--text-dim);">Загрузка...</p></div>
     </section>
 
     <!-- ===== КОНТАКТЫ ===== -->
@@ -591,7 +604,7 @@
       </p>
     </section>
 
-    <!-- ===== ДЕТАЛЬНАЯ СТАТЬЯ ===== -->
+    <!-- ===== ДЕТАЛЬНАЯ СТАТЬЯ (для статей и прочего) ===== -->
     <section id="post-detail" class="page">
       <!-- заполняется динамически -->
     </section>
@@ -614,54 +627,39 @@
     <section id="page-admin" class="page">
       <h1 style="color:var(--neon-purple); font-size:1.3rem;">🔧 Админ-панель</h1>
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
-        <p style="color:var(--text-dim);">Управление статьями в Firestore.</p>
+        <p style="color:var(--text-dim);">Управление контентом. Все изменения сохраняются в Firestore.</p>
         <button id="logoutBtn" style="background:transparent; border:1px solid var(--border); color:var(--text); padding:0.4rem 1rem; border-radius:4px; cursor:pointer; font-family:var(--font-mono);">
           <i class="fas fa-sign-out-alt"></i> Выйти
         </button>
       </div>
-      
-      <div class="admin-tools">
-        <button id="newPostBtn"><i class="fas fa-plus"></i> Новая статья</button>
-        <button id="refreshBtn"><i class="fas fa-sync"></i> Обновить</button>
-        <!-- Убрал экспорт/импорт, т.к. данные уже в облаке -->
+
+      <!-- Вкладки разделов -->
+      <div class="admin-tabs" id="adminTabs">
+        <button class="active" data-section="articles">📝 Статьи</button>
+        <button data-section="videos">🎥 Видео</button>
+        <button data-section="other">⚡ Прочее</button>
       </div>
 
-      <div id="adminList" class="admin-list"><p style="color:var(--text-dim);">Загрузка списка...</p></div>
+      <!-- Панель инструментов -->
+      <div class="admin-tools">
+        <button id="newItemBtn"><i class="fas fa-plus"></i> Новая запись</button>
+        <button id="refreshBtn"><i class="fas fa-sync"></i> Обновить</button>
+      </div>
+
+      <!-- Список записей -->
+      <div id="adminList" class="admin-list"><p style="color:var(--text-dim);">Загрузка...</p></div>
 
       <!-- Форма добавления/редактирования -->
       <div id="adminForm" class="admin-form hidden">
-        <h2 id="formTitle" style="color:var(--neon-green);">Новая статья</h2>
-        <div class="row">
-          <div>
-            <label>Заголовок *</label>
-            <input type="text" id="editTitle" placeholder="Заголовок статьи" />
-          </div>
-          <div>
-            <label>Дата *</label>
-            <input type="text" id="editDate" placeholder="дд месяц гггг" />
-          </div>
+        <h2 id="formTitle" style="color:var(--neon-green);">Новая запись</h2>
+        <div id="formFields">
+          <!-- Заполняется динамически в зависимости от раздела -->
         </div>
-        <div class="row">
-          <div>
-            <label>Иконка (эмодзи)</label>
-            <input type="text" id="editIcon" placeholder="🚴" maxlength="2" />
-          </div>
-          <div>
-            <label>Теги (через запятую)</label>
-            <input type="text" id="editTags" placeholder="вело, маршрут" />
-          </div>
-        </div>
-        <label>Краткое описание (превью) *</label>
-        <textarea id="editPreview" rows="2" placeholder="Краткий анонс"></textarea>
-        <label>Полный текст (Markdown / HTML) *</label>
-        <textarea id="editContent" rows="8" placeholder="Содержание статьи"></textarea>
         <div style="margin-top:0.5rem;">
-          <button id="savePostBtn"><i class="fas fa-save"></i> Сохранить</button>
+          <button id="saveItemBtn"><i class="fas fa-save"></i> Сохранить</button>
           <button id="cancelEditBtn" class="cancel-btn">Отмена</button>
         </div>
-        <p style="color:var(--text-dim); font-size:0.8rem; margin-top:0.5rem;">
-          * — обязательные поля. В полном тексте можно использовать Markdown (заголовки, списки, ссылки, изображения, код).
-        </p>
+        <p id="formHint" style="color:var(--text-dim); font-size:0.8rem; margin-top:0.5rem;"></p>
       </div>
     </section>
   </main>
@@ -675,7 +673,7 @@
 
   <script>
     // ============================================================
-    // ИНИЦИАЛИЗАЦИЯ FIREBASE (ваш конфиг)
+    // ИНИЦИАЛИЗАЦИЯ FIREBASE
     // ============================================================
     const firebaseConfig = {
       apiKey: "AIzaSyA-s8N2SnDpB4iArm5yRUJfe9ym1p_Obm8",
@@ -693,235 +691,370 @@
     // ============================================================
     // ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
     // ============================================================
-    let currentUser = null;         // объект пользователя Firebase
-    let isAdmin = false;           // флаг, что пользователь админ
-    let editingId = null;          // ID редактируемой статьи (для Firestore)
-    let easyMDE = null;            // экземпляр редактора
+    let currentUser = null;
+    let isAdmin = false;
+    let currentSection = 'articles'; // 'articles' | 'videos' | 'other'
+    let editingId = null;
+    let easyMDE = null;
+    let formType = 'articles'; // для определения полей формы
 
     // ============================================================
-    // ЗАГРУЗКА СТАТЕЙ ИЗ FIRESTORE
+    // ЗАГРУЗКА ДАННЫХ ИЗ FIRESTORE
     // ============================================================
-    async function loadPostsFromFirestore() {
+    async function loadCollection(collectionName) {
       try {
-        const snapshot = await db.collection('articles').orderBy('date', 'desc').get();
-        const articles = [];
+        const snapshot = await db.collection(collectionName).orderBy('date', 'desc').get();
+        const items = [];
         snapshot.forEach(doc => {
           const data = doc.data();
-          articles.push({
-            id: doc.id,
-            title: data.title || 'Без названия',
-            date: data.date || '',
-            icon: data.icon || '📄',
-            tags: data.tags || [],
-            preview: data.preview || '',
-            content: data.content || ''
-          });
+          items.push({ id: doc.id, ...data });
         });
-        return articles;
+        return items;
       } catch (error) {
-        console.error('Ошибка загрузки статей:', error);
-        alert('Не удалось загрузить статьи. Проверьте подключение к Firestore.');
+        console.error(`Ошибка загрузки ${collectionName}:`, error);
         return [];
       }
     }
 
     // ============================================================
-    // РЕНДЕРИНГ КАРТОЧЕК
+    // РЕНДЕРИНГ КАРТОЧЕК (для главной и страниц)
     // ============================================================
-    function renderPosts(containerId, articles) {
+    function renderArticles(containerId, articles, clickable = true) {
       const container = document.getElementById(containerId);
       if (!container) return;
       if (!articles || articles.length === 0) {
-        container.innerHTML = `<p style="color:var(--text-dim);">Пока нет статей. Напишите первую!</p>`;
+        container.innerHTML = `<p style="color:var(--text-dim);">Пока нет записей.</p>`;
         return;
       }
-      container.innerHTML = articles.map(post => `
-        <div class="post-card" data-post-id="${post.id}">
-          <h3>${post.icon} ${post.title}</h3>
-          <div class="meta">${post.date} · ${(post.tags || []).join(', ')}</div>
-          <p>${post.preview}</p>
+      container.innerHTML = articles.map(item => `
+        <div class="post-card" data-id="${item.id}" data-type="article">
+          <h3>${item.icon || '📄'} ${item.title}</h3>
+          <div class="meta">${item.date || ''} · ${(item.tags || []).join(', ')}</div>
+          <p>${item.preview || ''}</p>
         </div>
       `).join('');
+      if (!clickable) return;
+      container.querySelectorAll('.post-card').forEach(el => {
+        el.addEventListener('click', () => {
+          const id = el.dataset.id;
+          if (id) showDetail('articles', id);
+        });
+      });
     }
 
-    async function refreshAll() {
-      const articles = await loadPostsFromFirestore();
-      // Главная – последние 3
-      renderPosts('homePosts', articles.slice(0, 3));
-      renderPosts('allPosts', articles);
-      // Если мы в админке – обновим список
-      if (document.getElementById('page-admin').classList.contains('active')) {
-        renderAdminList(articles);
+    function renderVideos(containerId, videos) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      if (!videos || videos.length === 0) {
+        container.innerHTML = `<p style="color:var(--text-dim);">Нет видео.</p>`;
+        return;
       }
+      container.innerHTML = videos.map(item => {
+        const embedUrl = item.url ? item.url.replace('watch?v=', 'embed/') : '';
+        return `
+          <div class="video-item">
+            <iframe src="${embedUrl}" allowfullscreen></iframe>
+            <h4>${item.title}</h4>
+            <div class="meta">${item.date || ''}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderOther(containerId, items) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      if (!items || items.length === 0) {
+        container.innerHTML = `<p style="color:var(--text-dim);">Нет записей.</p>`;
+        return;
+      }
+      container.innerHTML = items.map(item => `
+        <div class="post-card" data-id="${item.id}" data-type="other">
+          <h3>${item.icon || '📄'} ${item.title}</h3>
+          <div class="meta">${item.date || ''}</div>
+          <p>${item.preview || ''}</p>
+        </div>
+      `).join('');
+      container.querySelectorAll('.post-card').forEach(el => {
+        el.addEventListener('click', () => {
+          const id = el.dataset.id;
+          if (id) showDetail('other', id);
+        });
+      });
     }
 
     // ============================================================
-    // ДЕТАЛЬНАЯ СТАТЬЯ
+    // ДЕТАЛЬНЫЙ ПРОСМОТР (для статей и прочего)
     // ============================================================
-    async function showPostDetail(postId) {
-      // Загружаем статью по ID из Firestore
+    async function showDetail(collection, id) {
       try {
-        const doc = await db.collection('articles').doc(postId).get();
-        if (!doc.exists) {
-          alert('Статья не найдена.');
-          return;
-        }
+        const doc = await db.collection(collection).doc(id).get();
+        if (!doc.exists) { alert('Запись не найдена.'); return; }
         const data = doc.data();
-        const post = {
-          id: doc.id,
-          title: data.title || 'Без названия',
-          date: data.date || '',
-          icon: data.icon || '📄',
-          tags: data.tags || [],
-          content: data.content || ''
-        };
-
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         const detailPage = document.getElementById('post-detail');
         detailPage.classList.add('active');
 
+        const content = data.content || '';
         detailPage.innerHTML = `
           <div class="back-link" id="backFromPost"><i class="fas fa-arrow-left"></i> Назад</div>
-          <h1>${post.icon} ${post.title}</h1>
-          <div class="post-meta">${post.date} · ${(post.tags || []).join(' • ')}</div>
-          <div class="post-content">${post.content}</div>
+          <h1>${data.icon || '📄'} ${data.title}</h1>
+          <div class="post-meta">${data.date || ''} · ${(data.tags || []).join(' • ')}</div>
+          <div class="post-content">${content}</div>
         `;
-
-        document.getElementById('backFromPost').addEventListener('click', () => {
-          history.back();
-        });
-
+        document.getElementById('backFromPost').addEventListener('click', () => history.back());
         if (history.pushState) {
-          history.pushState({ postId: postId }, '', '#post/' + postId);
+          history.pushState({ detail: true }, '', `#detail/${collection}/${id}`);
         }
         document.querySelectorAll('#mainNav a').forEach(link => link.classList.remove('active'));
       } catch (error) {
-        console.error('Ошибка загрузки статьи:', error);
-        alert('Не удалось загрузить статью.');
+        console.error('Ошибка загрузки детали:', error);
+        alert('Не удалось загрузить запись.');
       }
+    }
+
+    // ============================================================
+    // ОБНОВЛЕНИЕ ВСЕХ РАЗДЕЛОВ НА ФРОНТЕНДЕ
+    // ============================================================
+    async function refreshFrontend() {
+      const articles = await loadCollection('articles');
+      const videos = await loadCollection('videos');
+      const other = await loadCollection('other');
+
+      renderArticles('homePosts', articles.slice(0, 3), true);
+      renderArticles('allPosts', articles, true);
+      renderVideos('videoList', videos);
+      renderOther('otherList', other);
     }
 
     // ============================================================
     // АДМИНКА – РЕНДЕРИНГ СПИСКА
     // ============================================================
-    function renderAdminList(articles) {
+    async function renderAdminList() {
       const list = document.getElementById('adminList');
-      if (!articles) {
-        list.innerHTML = '<p style="color:var(--text-dim);">Загрузка...</p>';
+      const items = await loadCollection(currentSection);
+      if (!items || items.length === 0) {
+        list.innerHTML = `<p style="color:var(--text-dim);">Нет записей в этом разделе.</p>`;
         return;
       }
-      if (articles.length === 0) {
-        list.innerHTML = '<p style="color:var(--text-dim);">Нет статей. Создайте первую!</p>';
-        return;
-      }
-      list.innerHTML = articles.map(post => `
-        <div class="admin-item" data-id="${post.id}">
-          <span><span class="title">${post.icon} ${post.title}</span> <span style="color:var(--text-dim); font-size:0.8rem;">${post.date}</span></span>
+      list.innerHTML = items.map(item => `
+        <div class="admin-item" data-id="${item.id}">
+          <span><span class="title">${item.icon || '📄'} ${item.title}</span> <span style="color:var(--text-dim); font-size:0.8rem;">${item.date || ''}</span></span>
           <div class="actions">
-            <button onclick="editPost('${post.id}')" title="Редактировать"><i class="fas fa-edit"></i></button>
-            <button onclick="deletePost('${post.id}')" class="del" title="Удалить"><i class="fas fa-trash"></i></button>
+            <button onclick="editItem('${item.id}')" title="Редактировать"><i class="fas fa-edit"></i></button>
+            <button onclick="deleteItem('${item.id}')" class="del" title="Удалить"><i class="fas fa-trash"></i></button>
           </div>
         </div>
       `).join('');
     }
 
     // ============================================================
-    // ОПЕРАЦИИ CRUD (Firestore)
+    // ОПЕРАЦИИ CRUD
     // ============================================================
-    async function deletePost(id) {
-      if (!confirm('Удалить статью навсегда?')) return;
+    async function deleteItem(id) {
+      if (!confirm('Удалить запись навсегда?')) return;
       try {
-        await db.collection('articles').doc(id).delete();
-        alert('Статья удалена.');
-        refreshAll(); // обновим всё
+        await db.collection(currentSection).doc(id).delete();
+        alert('Запись удалена.');
+        renderAdminList();
+        refreshFrontend();
       } catch (error) {
         console.error('Ошибка удаления:', error);
-        alert('Не удалось удалить статью.');
+        alert('Не удалось удалить запись.');
       }
     }
 
-    async function editPost(id) {
+    async function editItem(id) {
       try {
-        const doc = await db.collection('articles').doc(id).get();
-        if (!doc.exists) {
-          alert('Статья не найдена.');
-          return;
-        }
+        const doc = await db.collection(currentSection).doc(id).get();
+        if (!doc.exists) { alert('Запись не найдена.'); return; }
         const data = doc.data();
         editingId = id;
-        document.getElementById('formTitle').textContent = 'Редактирование статьи';
-        document.getElementById('editTitle').value = data.title || '';
-        document.getElementById('editDate').value = data.date || '';
-        document.getElementById('editIcon').value = data.icon || '';
-        document.getElementById('editTags').value = (data.tags || []).join(', ');
-        document.getElementById('editPreview').value = data.preview || '';
-        if (easyMDE) easyMDE.value(data.content || '');
-        document.getElementById('adminForm').classList.remove('hidden');
-        document.getElementById('adminForm').scrollIntoView({ behavior: 'smooth' });
+        showForm(data);
       } catch (error) {
         console.error('Ошибка загрузки для редактирования:', error);
-        alert('Не удалось загрузить статью для редактирования.');
+        alert('Не удалось загрузить запись.');
       }
     }
 
-    async function savePostFromForm() {
-      const title = document.getElementById('editTitle').value.trim();
-      const date = document.getElementById('editDate').value.trim();
-      const icon = document.getElementById('editIcon').value.trim();
-      const tagsRaw = document.getElementById('editTags').value.trim();
-      const preview = document.getElementById('editPreview').value.trim();
-      const content = easyMDE ? easyMDE.value().trim() : '';
-
-      if (!title || !date || !preview || !content) {
-        alert('Заполните все обязательные поля: Заголовок, Дата, Превью, Содержание.');
-        return;
-      }
-
-      const tags = tagsRaw ? tagsRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
-
-      const postData = {
-        title,
-        date,
-        icon: icon || '📄',
-        tags,
-        preview,
-        content,
-        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-      };
-
+    async function saveItem() {
+      const data = collectFormData();
+      if (!data) return;
       try {
         if (editingId) {
-          // Обновление
-          await db.collection('articles').doc(editingId).update(postData);
-          alert('Статья обновлена!');
+          await db.collection(currentSection).doc(editingId).update(data);
+          alert('Запись обновлена!');
         } else {
-          // Добавление
-          await db.collection('articles').add(postData);
-          alert('Статья добавлена!');
+          await db.collection(currentSection).add(data);
+          alert('Запись добавлена!');
         }
         editingId = null;
         resetForm();
-        refreshAll();
+        renderAdminList();
+        refreshFrontend();
       } catch (error) {
         console.error('Ошибка сохранения:', error);
-        alert('Не удалось сохранить статью. Проверьте права доступа.');
+        alert('Не удалось сохранить запись. Проверьте права доступа.');
       }
+    }
+
+    // ============================================================
+    // ФОРМА – ДИНАМИЧЕСКОЕ ПОСТРОЕНИЕ
+    // ============================================================
+    function showForm(data = null) {
+      const formContainer = document.getElementById('formFields');
+      const hint = document.getElementById('formHint');
+      const titleEl = document.getElementById('formTitle');
+      titleEl.textContent = data ? 'Редактирование записи' : 'Новая запись';
+
+      // Строим поля в зависимости от раздела
+      let html = `
+        <div class="row">
+          <div>
+            <label>Заголовок *</label>
+            <input type="text" id="editTitle" value="${data?.title || ''}" placeholder="Заголовок" />
+          </div>
+          <div>
+            <label>Дата *</label>
+            <input type="text" id="editDate" value="${data?.date || ''}" placeholder="дд месяц гггг" />
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label>Иконка (эмодзи)</label>
+            <input type="text" id="editIcon" value="${data?.icon || ''}" placeholder="🚴" maxlength="2" />
+          </div>
+      `;
+
+      if (currentSection === 'articles') {
+        html += `
+          <div>
+            <label>Теги (через запятую)</label>
+            <input type="text" id="editTags" value="${(data?.tags || []).join(', ')}" placeholder="тег1, тег2" />
+          </div>
+        </div>
+        <label>Краткое описание (превью) *</label>
+        <textarea id="editPreview" rows="2" placeholder="Краткий анонс">${data?.preview || ''}</textarea>
+        <label>Полный текст (Markdown / HTML) *</label>
+        <textarea id="editContent" rows="8" placeholder="Содержание">${data?.content || ''}</textarea>
+        `;
+        hint.textContent = 'В полном тексте можно использовать Markdown (заголовки, списки, ссылки, изображения, код).';
+      } else if (currentSection === 'videos') {
+        html += `
+          <div>
+            <label>Ссылка на видео (YouTube, Vimeo и т.д.)</label>
+            <input type="url" id="editUrl" value="${data?.url || ''}" placeholder="https://www.youtube.com/watch?v=..." />
+          </div>
+        </div>
+        <div class="video-url-hint">Вставьте ссылку на страницу видео (не embed-код).</div>
+        `;
+        hint.textContent = 'Поле "Ссылка" обязательно. Видео будет встроено на сайт.';
+      } else if (currentSection === 'other') {
+        html += `
+          </div>
+          <label>Краткое описание (превью) *</label>
+          <textarea id="editPreview" rows="2" placeholder="Краткое описание">${data?.preview || ''}</textarea>
+          <label>Полный текст (Markdown / HTML)</label>
+          <textarea id="editContent" rows="8" placeholder="Содержание">${data?.content || ''}</textarea>
+        `;
+        hint.textContent = 'Полный текст может содержать Markdown или HTML.';
+      }
+
+      formContainer.innerHTML = html;
+      document.getElementById('adminForm').classList.remove('hidden');
+      document.getElementById('adminForm').scrollIntoView({ behavior: 'smooth' });
+
+      // Инициализация EasyMDE для текстовых полей с content
+      setTimeout(() => {
+        const contentTextarea = document.getElementById('editContent');
+        if (contentTextarea && !easyMDE) {
+          easyMDE = new EasyMDE({
+            element: contentTextarea,
+            spellChecker: false,
+            toolbar: ['bold', 'italic', 'heading', 'quote', 'unordered-list', 'ordered-list', 'link', 'image', 'code', 'preview', 'side-by-side', 'fullscreen']
+          });
+        } else if (contentTextarea && easyMDE) {
+          easyMDE.value(data?.content || '');
+        }
+      }, 100);
+    }
+
+    function collectFormData() {
+      const title = document.getElementById('editTitle').value.trim();
+      const date = document.getElementById('editDate').value.trim();
+      const icon = document.getElementById('editIcon').value.trim();
+      if (!title || !date) {
+        alert('Заголовок и Дата обязательны.');
+        return null;
+      }
+
+      let data = { title, date, icon: icon || '📄' };
+
+      if (currentSection === 'articles') {
+        const preview = document.getElementById('editPreview').value.trim();
+        const content = easyMDE ? easyMDE.value().trim() : document.getElementById('editContent').value.trim();
+        const tagsRaw = document.getElementById('editTags').value.trim();
+        if (!preview || !content) {
+          alert('Превью и полный текст обязательны для статей.');
+          return null;
+        }
+        data.preview = preview;
+        data.content = content;
+        data.tags = tagsRaw ? tagsRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
+      } else if (currentSection === 'videos') {
+        const url = document.getElementById('editUrl').value.trim();
+        if (!url) {
+          alert('Ссылка на видео обязательна.');
+          return null;
+        }
+        data.url = url;
+        // Для видео нет preview и content, но можно добавить пустые поля для единообразия
+        data.preview = '';
+        data.content = '';
+        data.tags = [];
+      } else if (currentSection === 'other') {
+        const preview = document.getElementById('editPreview').value.trim();
+        const content = easyMDE ? easyMDE.value().trim() : document.getElementById('editContent').value.trim();
+        if (!preview) {
+          alert('Краткое описание обязательно.');
+          return null;
+        }
+        data.preview = preview;
+        data.content = content || '';
+        data.tags = [];
+      }
+      return data;
     }
 
     function resetForm() {
       editingId = null;
-      document.getElementById('formTitle').textContent = 'Новая статья';
+      document.getElementById('adminForm').classList.add('hidden');
+      if (easyMDE) easyMDE.value('');
       document.getElementById('editTitle').value = '';
       document.getElementById('editDate').value = '';
       document.getElementById('editIcon').value = '';
-      document.getElementById('editTags').value = '';
-      document.getElementById('editPreview').value = '';
-      if (easyMDE) easyMDE.value('');
-      document.getElementById('adminForm').classList.add('hidden');
+      const tagsField = document.getElementById('editTags');
+      if (tagsField) tagsField.value = '';
+      const previewField = document.getElementById('editPreview');
+      if (previewField) previewField.value = '';
+      const urlField = document.getElementById('editUrl');
+      if (urlField) urlField.value = '';
     }
 
     // ============================================================
-    // АВТОРИЗАЦИЯ И ПРОВЕРКА АДМИНА
+    // АДМИНКА – ПЕРЕКЛЮЧЕНИЕ РАЗДЕЛОВ
+    // ============================================================
+    function switchSection(section) {
+      currentSection = section;
+      document.querySelectorAll('#adminTabs button').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.section === section);
+      });
+      resetForm();
+      renderAdminList();
+    }
+
+    // ============================================================
+    // АВТОРИЗАЦИЯ
     // ============================================================
     async function checkAdmin(email) {
       try {
@@ -933,17 +1066,14 @@
       }
     }
 
-    // Обработчик формы логина
     document.getElementById('loginForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       const email = document.getElementById('loginEmail').value.trim();
       const password = document.getElementById('loginPassword').value.trim();
       const errorEl = document.getElementById('loginError');
       errorEl.textContent = '';
-
       try {
-        const cred = await auth.signInWithEmailAndPassword(email, password);
-        // После успешного входа сработает onAuthStateChanged
+        await auth.signInWithEmailAndPassword(email, password);
       } catch (error) {
         console.error('Ошибка входа:', error);
         errorEl.textContent = 'Неверный email или пароль.';
@@ -952,46 +1082,35 @@
       }
     });
 
-    // Наблюдатель за состоянием аутентификации
     auth.onAuthStateChanged(async function(user) {
       if (user) {
         currentUser = user;
-        // Проверяем, является ли пользователь админом
         isAdmin = await checkAdmin(user.email);
         if (isAdmin) {
-          // Показываем админку
           switchPage('admin');
-          // Инициализируем редактор, если ещё нет
           if (!easyMDE) {
-            const textarea = document.getElementById('editContent');
-            easyMDE = new EasyMDE({ element: textarea, spellChecker: false, toolbar: ['bold', 'italic', 'heading', 'quote', 'unordered-list', 'ordered-list', 'link', 'image', 'code', 'preview', 'side-by-side', 'fullscreen'] });
+            // EasyMDE будет создан при открытии формы
           }
-          refreshAll();
+          renderAdminList();
           resetForm();
           alert('Добро пожаловать в админ-панель, zerixxx!');
         } else {
-          // Пользователь залогинен, но не админ – показываем главную и уведомляем
           alert('У вас нет прав администратора.');
-          await auth.signOut(); // разлогиниваем, чтобы он не мешал
+          await auth.signOut();
           switchPage('home');
         }
       } else {
-        // Пользователь вышел
         currentUser = null;
         isAdmin = false;
-        // Если мы были в админке или логине – уходим на главную
         const activePage = document.querySelector('.page.active');
         if (activePage && (activePage.id === 'page-admin' || activePage.id === 'page-login')) {
           switchPage('home');
         }
-        // Сброс формы в админке (если она была открыта)
         resetForm();
-        // Обновляем список (на случай, если статьи изменились)
-        refreshAll();
+        refreshFrontend();
       }
     });
 
-    // Выход из аккаунта
     document.getElementById('logoutBtn').addEventListener('click', async function() {
       try {
         await auth.signOut();
@@ -1007,18 +1126,13 @@
     // ============================================================
     let clickCount = 0;
     let clickTimer = null;
-
     document.getElementById('logoHome').addEventListener('click', function(e) {
       clickCount++;
       if (clickTimer) clearTimeout(clickTimer);
-      clickTimer = setTimeout(() => {
-        clickCount = 0;
-      }, 1500);
-
+      clickTimer = setTimeout(() => { clickCount = 0; }, 1500);
       if (clickCount >= 5) {
         clickCount = 0;
         clearTimeout(clickTimer);
-        // Если пользователь уже админ – открываем админку, иначе страницу логина
         if (isAdmin && currentUser) {
           switchPage('admin');
         } else {
@@ -1035,17 +1149,13 @@
     // НАВИГАЦИЯ И ПЕРЕКЛЮЧЕНИЕ СТРАНИЦ
     // ============================================================
     function switchPage(pageId) {
-      // Защита: нельзя перейти в админку или логин напрямую через хэш
       const currentHash = window.location.hash;
       if ((pageId === 'admin' || pageId === 'login') && (currentHash === '#admin' || currentHash === '#login')) {
-        pageId = 'home'; // перенаправляем на главную, если кто-то пытается подобрать URL
+        pageId = 'home';
       }
-
-      // Если пытаемся открыть админку, но не админ – идём на логин
       if (pageId === 'admin' && !isAdmin) {
         pageId = 'login';
       }
-
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       const target = document.getElementById('page-' + pageId);
       if (target) target.classList.add('active');
@@ -1054,7 +1164,6 @@
         link.classList.toggle('active', link.dataset.page === pageId);
       });
 
-      // Обновляем хэш, но для логина и админки не сохраняем
       if (pageId !== 'login' && pageId !== 'admin' && history.pushState) {
         history.pushState({ page: pageId }, '', '#' + pageId);
       } else if (pageId === 'login' || pageId === 'admin') {
@@ -1062,49 +1171,21 @@
           history.replaceState({ page: 'home' }, '', '#home');
         }
       }
-
-      // Если перешли на админку – обновить список
       if (pageId === 'admin') {
-        refreshAll();
+        // Если админка, то показываем список для текущего раздела
+        renderAdminList();
+        resetForm();
+      }
+      if (pageId === 'home' || pageId === 'articles' || pageId === 'video' || pageId === 'other') {
+        refreshFrontend();
       }
     }
 
     // ============================================================
-    // ОБРАБОТКА HASH (для статей)
-    // ============================================================
-    function handleHash() {
-      const hash = window.location.hash;
-      if (hash.startsWith('#post/')) {
-        const id = hash.split('/')[1];
-        if (id) showPostDetail(id);
-        else switchPage('home');
-      } else if (hash.startsWith('#') && hash.length > 1) {
-        const page = hash.replace('#', '');
-        if (['home', 'articles', 'video', 'other', 'contacts'].includes(page)) {
-          switchPage(page);
-        } else {
-          switchPage('home');
-        }
-      } else {
-        switchPage('home');
-      }
-    }
-
-    // ============================================================
-    // ИНИЦИАЛИЗАЦИЯ ПРИ ЗАГРУЗКЕ
+    // ОБРАБОТЧИКИ СОБЫТИЙ
     // ============================================================
     document.addEventListener('DOMContentLoaded', function() {
-      // Первоначальная загрузка статей
-      refreshAll();
-
-      // Клик по карточке
-      document.addEventListener('click', function(e) {
-        const card = e.target.closest('.post-card');
-        if (card && card.dataset.postId) {
-          const id = card.dataset.postId;
-          showPostDetail(id);
-        }
-      });
+      refreshFrontend();
 
       // Навигация
       document.querySelectorAll('#mainNav a').forEach(link => {
@@ -1115,25 +1196,57 @@
         });
       });
 
+      // Админка – вкладки
+      document.querySelectorAll('#adminTabs button').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const section = this.dataset.section;
+          if (section) switchSection(section);
+        });
+      });
+
       // Кнопки админки
-      document.getElementById('newPostBtn').addEventListener('click', function() {
+      document.getElementById('newItemBtn').addEventListener('click', function() {
         resetForm();
-        document.getElementById('adminForm').classList.remove('hidden');
-        document.getElementById('adminForm').scrollIntoView({ behavior: 'smooth' });
+        showForm(null);
       });
 
       document.getElementById('refreshBtn').addEventListener('click', function() {
-        refreshAll();
+        renderAdminList();
+        refreshFrontend();
       });
 
-      document.getElementById('savePostBtn').addEventListener('click', savePostFromForm);
+      document.getElementById('saveItemBtn').addEventListener('click', saveItem);
       document.getElementById('cancelEditBtn').addEventListener('click', resetForm);
 
-      // Обработка хэша при загрузке и при изменении истории
+      // Обработка хэша (для детального просмотра)
+      function handleHash() {
+        const hash = window.location.hash;
+        if (hash.startsWith('#detail/')) {
+          const parts = hash.split('/');
+          if (parts.length === 3) {
+            const collection = parts[1];
+            const id = parts[2];
+            if (collection && id) {
+              showDetail(collection, id);
+              return;
+            }
+          }
+        }
+        // Обычная страница
+        if (hash.startsWith('#') && hash.length > 1) {
+          const page = hash.replace('#', '');
+          if (['home', 'articles', 'video', 'other', 'contacts'].includes(page)) {
+            switchPage(page);
+          } else {
+            switchPage('home');
+          }
+        } else {
+          switchPage('home');
+        }
+      }
+
       window.addEventListener('popstate', handleHash);
       handleHash();
-
-      // Если пользователь уже залогинен (например, сессия не истекла) – onAuthStateChanged сработает автоматически
     });
   </script>
 </body>
