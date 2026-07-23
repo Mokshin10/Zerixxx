@@ -113,7 +113,7 @@ function renderOther(containerId, items) {
 }
 
 // ============================================================
-// ДЕТАЛЬНЫЙ ПРОСМОТР (С ПАРСИНГОМ MARKDOWN)
+// ДЕТАЛЬНЫЙ ПРОСМОТР (С ПАРСИНГОМ MARKDOWN) - ИСПРАВЛЕНА!
 // ============================================================
 async function showDetail(collection, id) {
   try {
@@ -125,9 +125,19 @@ async function showDetail(collection, id) {
     detailPage.classList.add('active');
 
     let content = data.content || '';
-    // Преобразуем Markdown в HTML, если доступен marked
-    if (typeof marked !== 'undefined' && content) {
-      content = marked.parse(content);
+
+    // Парсим Markdown, если библиотека загружена
+    if (typeof marked !== 'undefined' && typeof marked.parse === 'function') {
+      try {
+        content = marked.parse(content);
+        console.log('Markdown успешно преобразован');
+      } catch (e) {
+        console.error('Ошибка парсинга Markdown:', e);
+      }
+    } else {
+      // Если marked не загружен, показываем предупреждение и сырой текст
+      console.warn('Библиотека marked не найдена. Отображаем текст без форматирования.');
+      // Альтернатива: можно встроить простой парсер, но для простоты просто оставляем как есть
     }
 
     detailPage.innerHTML = `
@@ -213,13 +223,8 @@ window.editItem = async function(id) {
 // СОХРАНЕНИЕ (ИСПРАВЛЕННОЕ)
 // ============================================================
 async function saveItem() {
-  // Принудительно синхронизируем EasyMDE с textarea
   if (easyMDE) {
-    try {
-      easyMDE.codemirror.save();
-    } catch (e) {
-      console.warn('Ошибка синхронизации EasyMDE:', e);
-    }
+    try { easyMDE.codemirror.save(); } catch (e) {}
   }
 
   const title = document.getElementById('editTitle')?.value?.trim() || '';
@@ -235,9 +240,7 @@ async function saveItem() {
 
   if (currentSection === 'articles') {
     const preview = document.getElementById('editPreview')?.value?.trim() || '';
-    // Читаем из textarea (уже синхронизировано)
     let content = document.getElementById('editContent')?.value?.trim() || '';
-    // Запасные варианты
     if (easyMDE && !content) {
       content = easyMDE.value().trim() || '';
     }
@@ -367,7 +370,6 @@ function showForm(data = null) {
   document.getElementById('adminForm').classList.remove('hidden');
   document.getElementById('adminForm').scrollIntoView({ behavior: 'smooth' });
 
-  // Инициализация EasyMDE с увеличенной задержкой
   setTimeout(() => {
     const contentTextarea = document.getElementById('editContent');
     if (contentTextarea && contentTextarea.tagName === 'TEXTAREA' && contentTextarea.type !== 'hidden') {
@@ -607,4 +609,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
   window.addEventListener('popstate', handleHash);
   handleHash();
-});ы
+});
